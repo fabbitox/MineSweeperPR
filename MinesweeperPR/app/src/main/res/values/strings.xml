@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MinesweeperPR</string>
+    <string name="column_text">행(최소 5, 최대 20):</string>
+    <string name="row_text">열(최소 8, 최대 32):</string>
+    <string name="bomb_text">지뢰(최소 4, 최대 행X열-10):</string>
+    <string name="start_text">시작하기</string>
+    <string name="restart_text">다시시작</string>
+    <string name="blank"> </string>
+</resources>
