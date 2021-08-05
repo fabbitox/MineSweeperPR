@@ -4,4 +4,7 @@
     <string name="row_text">열(최소 8, 최대 36):</string>
     <string name="start_text">시작하기</string>
     <string name="restart_text">다시시작</string>
+    <string name="common_bomb">common_bomb</string>
+    <string name="one">one</string>
+    <string name="two">two</string>
 </resources>
