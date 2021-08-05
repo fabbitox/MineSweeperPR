@@ -32,11 +32,11 @@
                 android:id="@+id/column_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:labelFor="@id/column_input"
                 android:textColor="#6600CC"
-                android:textColorHint="#6600CC"
-                android:importantForAutofill="no" />
+                android:textColorHint="#6600CC" />
         </LinearLayout>
 
         <LinearLayout
@@ -56,11 +56,35 @@
                 android:id="@+id/row_input"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:importantForAutofill="no"
                 android:inputType="number"
                 android:labelFor="@id/row_input"
                 android:textColor="#6600CC"
-                android:textColorHint="#6600CC"
-                android:importantForAutofill="no" />
+                android:textColorHint="#6600CC" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/bomb_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/bomb_text"
+                android:textColor="#6600CC" />
+
+            <EditText
+                android:id="@+id/bomb_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:labelFor="@id/bomb_input"
+                android:textColor="#6600CC"
+                android:textColorHint="#6600CC" />
         </LinearLayout>
 
         <Button
@@ -90,4 +114,5 @@
         android:textColor="@color/white"
         android:visibility="invisible"
         app:backgroundTint="#6600CC" />
+
 </FrameLayout>
