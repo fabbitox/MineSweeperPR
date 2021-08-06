@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private TableLayout board;
     private int boardWidth;
     private int boardHeight;
+    private Game game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         int bombMin = 4;
         int columnMax = 20;
         int rowMax = 32;
+
+        game = Game.getInstance();
 
         startBtn.setOnClickListener(v -> {
             getBoardSize();
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 if (bombBigger) bomb = bombMax;
                 else if (bombSmaller) bomb = bombMin;
 
-                fillBoard(column, row);
+                fillBoard(column, row, bomb);
                 valueInput.setVisibility(View.INVISIBLE);
                 restartBtn.setVisibility(View.VISIBLE);
             }
@@ -87,12 +90,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fillBoard(int columnCount, int rowCount) {
+    private void fillBoard(int columnCount, int rowCount, int bombCount) {
         int width = boardWidth / columnCount;
         int height = boardHeight / rowCount;
         int buttonSize = Math.min(width, height);
         int i, j;
 
+        game.positionBomb(columnCount, rowCount, bombCount);
         for (i = 0; i < rowCount; i++) {
             TableRow row = new TableRow(this);
             board.addView(row);
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 ib.setLayoutParams(lp);
                 ib.setBackgroundColor(0xffffffff);
                 ib.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                ib.setImageResource(R.drawable.blank);
+                game.setBombImage(ib, i * columnCount + j);
                 row.addView(ib);
             }
         }
