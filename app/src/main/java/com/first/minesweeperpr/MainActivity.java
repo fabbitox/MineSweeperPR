@@ -102,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 ib.setLayoutParams(lp);
                 ib.setBackgroundColor(0xffffffff);
                 ib.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                int current = i * columnCount + j;// 몇 번째 버튼인지
-                int whatImage = current % 10;
-                setNumberImage(ib, whatImage);
+                ib.setImageResource(R.drawable.blank);
                 row.addView(ib);
             }
         }
@@ -113,38 +111,5 @@ public class MainActivity extends AppCompatActivity {
         int spaceHeight = boardHeight - buttonSize * rowCount;
         board.setX(spaceWidth >> 1);
         board.setY(spaceHeight >> 1);
-    }
-
-    private void setNumberImage(ImageButton ib, int whatImage) {
-        if (whatImage == 0) {
-            ib.setImageResource(R.drawable.blank);
-        }
-        else if (whatImage == 1) {
-            ib.setImageResource(R.drawable.one);
-        }
-        else if (whatImage == 2) {
-            ib.setImageResource(R.drawable.two);
-        }
-        else if (whatImage == 3) {
-            ib.setImageResource(R.drawable.three);
-        }
-        else if (whatImage == 4) {
-            ib.setImageResource(R.drawable.four);
-        }
-        else if (whatImage == 5) {
-            ib.setImageResource(R.drawable.five);
-        }
-        else if (whatImage == 6) {
-            ib.setImageResource(R.drawable.six);
-        }
-        else if (whatImage == 7) {
-            ib.setImageResource(R.drawable.seven);
-        }
-        else if (whatImage == 8) {
-            ib.setImageResource(R.drawable.eight);
-        }
-        else {
-            ib.setImageResource(R.drawable.bomb);
-        }
     }
 }
