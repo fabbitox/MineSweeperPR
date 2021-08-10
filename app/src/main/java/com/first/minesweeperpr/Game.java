@@ -1,6 +1,7 @@
 package com.first.minesweeperpr;
 
 import android.widget.ImageButton;
+import android.widget.TableLayout;
 
 import java.util.Random;
 
@@ -18,11 +19,12 @@ public class Game {
     }
 
     private final Random random = new Random();
+    private int columnCount;
     private int bombLeft;
     private int totalCellCount;
-    private boolean[] bombMap;
+    private boolean[] bombMap;// 지뢰 있으면 true
 
-    public void positionBomb(int column, int row, int bomb) {
+    public void positionBomb(int column, int row, int bomb) {// 지뢰 위치 랜덤으로 생성
         initialize(column, row, bomb);
         int bombIndex;
         while (bombLeft > 0) {
@@ -34,16 +36,8 @@ public class Game {
         }
     }
 
-    public void setBombImage(ImageButton ib, int index) {// 테스트하기 위함
-        if (bombMap[index]) {
-            ib.setImageResource(R.drawable.bomb);
-        }
-        else {
-            ib.setImageResource(R.drawable.blank);
-        }
-    }
-
     private void initialize(int column, int row, int bomb) {
+        columnCount = column;
         totalCellCount = column * row;
         bombLeft = bomb;
         bombMap = new boolean[totalCellCount];
@@ -53,36 +47,89 @@ public class Game {
         random.setSeed(currentTimeMillis());
     }
 
-    public void setNumberImage(ImageButton ib, int whatImage) {// 일단 만들어 뒀는데 수정해서 쓰려나
-        if (whatImage == 0) {
-            ib.setImageResource(R.drawable.blank);
+    public int countAround(int index) {
+        int bombCount = 0;
+        int[] arounds = new int[] {
+                getLeftUp(index), getUp(index), getRightUp(index), getLeft(index), getRight(index),
+                getLeftDown(index), getDown(index), getRightDown(index)
+        };
+        for (int i = 0; i < 8; i++) {
+            if (isValidIndex(arounds[i]) && bombMap[arounds[i]]) {
+                bombCount++;
+            }
         }
-        else if (whatImage == 1) {
-            ib.setImageResource(R.drawable.one);
-        }
-        else if (whatImage == 2) {
-            ib.setImageResource(R.drawable.two);
-        }
-        else if (whatImage == 3) {
-            ib.setImageResource(R.drawable.three);
-        }
-        else if (whatImage == 4) {
-            ib.setImageResource(R.drawable.four);
-        }
-        else if (whatImage == 5) {
-            ib.setImageResource(R.drawable.five);
-        }
-        else if (whatImage == 6) {
-            ib.setImageResource(R.drawable.six);
-        }
-        else if (whatImage == 7) {
-            ib.setImageResource(R.drawable.seven);
-        }
-        else if (whatImage == 8) {
-            ib.setImageResource(R.drawable.eight);
+        return bombCount;
+    }
+
+    private boolean isValidIndex(int index) {
+        return index >= 0 && index < totalCellCount;
+    }
+
+    private int getLeftUp(int index) {
+        return index - columnCount - 1;
+    }
+
+    private int getUp(int index) {
+        return index - columnCount;
+    }
+
+    private int getRightUp(int index) {
+        return index - columnCount + 1;
+    }
+
+    private int getLeft(int index) {
+        return index - 1;
+    }
+
+    private int getRight(int index) {
+        return index + 1;
+    }
+
+    private int getLeftDown(int index) {
+        return index + columnCount - 1;
+    }
+
+    private int getDown(int index) {
+        return index + columnCount;
+    }
+
+    private int getRightDown(int index) {
+        return index + columnCount + 1;
+    }
+
+    public void setImage(ImageButton ib, int index) {
+        if (bombMap[index]) {
+            ib.setImageResource(R.drawable.bomb);
         }
         else {
-            ib.setImageResource(R.drawable.bomb);
+            int aroundBomb = countAround(index);
+            if (aroundBomb == 0) {
+                ib.setImageResource(R.drawable.blank);
+            }
+            else if (aroundBomb == 1) {
+                ib.setImageResource(R.drawable.one);
+            }
+            else if (aroundBomb == 2) {
+                ib.setImageResource(R.drawable.two);
+            }
+            else if (aroundBomb == 3) {
+                ib.setImageResource(R.drawable.three);
+            }
+            else if (aroundBomb == 4) {
+                ib.setImageResource(R.drawable.four);
+            }
+            else if (aroundBomb == 5) {
+                ib.setImageResource(R.drawable.five);
+            }
+            else if (aroundBomb == 6) {
+                ib.setImageResource(R.drawable.six);
+            }
+            else if (aroundBomb == 7) {
+                ib.setImageResource(R.drawable.seven);
+            }
+            else {
+                ib.setImageResource(R.drawable.eight);
+            }
         }
     }
 }

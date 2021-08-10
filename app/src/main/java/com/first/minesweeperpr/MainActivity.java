@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 ib.setLayoutParams(lp);
                 ib.setBackgroundColor(0xffffffff);
                 ib.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                game.setBombImage(ib, i * columnCount + j);
+                game.setImage(ib, i * columnCount + j);
                 row.addView(ib);
             }
         }
