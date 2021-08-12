@@ -1,10 +1,7 @@
 package com.first.minesweeperpr;
 
 import android.widget.ImageButton;
-import android.widget.TableLayout;
-
 import java.util.Random;
-
 import static java.lang.System.currentTimeMillis;
 
 public class Game {
