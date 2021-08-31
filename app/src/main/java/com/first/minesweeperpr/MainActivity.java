@@ -96,17 +96,19 @@ public class MainActivity extends AppCompatActivity {
         int buttonSize = Math.min(width, height);
         int i, j;
 
-        game.positionBomb(columnCount, rowCount, bombCount);
+        game.positionBomb(columnCount, rowCount, bombCount);//폭탄 위치 잡기
         for (i = 0; i < rowCount; i++) {
             TableRow row = new TableRow(this);
             board.addView(row);
             TableRow.LayoutParams lp = new TableRow.LayoutParams(buttonSize, buttonSize);
             for (j = 0; j < columnCount; j++) {
+                int index = i * columnCount + j;
                 ImageButton ib = new ImageButton(this);
                 ib.setLayoutParams(lp);
                 ib.setBackgroundColor(0xffffffff);
                 ib.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                game.setImage(ib, i * columnCount + j);
+                ib.setImageResource(R.drawable.blank);
+                ib.setOnClickListener(v -> reveal((ImageButton) v, index));
                 row.addView(ib);
             }
         }
@@ -115,5 +117,9 @@ public class MainActivity extends AppCompatActivity {
         int spaceHeight = boardHeight - buttonSize * rowCount;
         board.setX(spaceWidth >> 1);
         board.setY(spaceHeight >> 1);
+    }
+
+    private void reveal(ImageButton ib, int index) {
+        game.setImage(ib, index);
     }
 }
