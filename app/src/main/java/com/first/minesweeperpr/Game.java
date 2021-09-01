@@ -7,6 +7,7 @@ import static java.lang.System.currentTimeMillis;
 public class Game {
     // singleton pattern
     public static Game instance;
+
     private Game() {}
     public static Game getInstance() {
         if (instance == null) {
@@ -16,10 +17,12 @@ public class Game {
     }
 
     private final Random random = new Random();
-    private int columnCount;
+    public int columnCount;
     private int bombLeft;
     private int totalCellCount;
     private boolean[] bombMap;// 지뢰 있으면 true
+    private int[] arounds;// 주위 셀
+    private boolean[] opened;// 열린 셀리면 true
 
     public void positionBomb(int column, int row, int bomb) {// 지뢰 위치 랜덤으로 생성
         initialize(column, row, bomb);
@@ -33,33 +36,55 @@ public class Game {
         }
     }
 
-    private void initialize(int column, int row, int bomb) {
+    private void initialize(int column, int row, int bomb) {// 초기화
         columnCount = column;
         totalCellCount = column * row;
         bombLeft = bomb;
         bombMap = new boolean[totalCellCount];
+        opened = new boolean[totalCellCount];
         for (int i = 0; i < totalCellCount; i++) {
             bombMap[i] = false;
+            opened[i] = false;
         }
         random.setSeed(currentTimeMillis());
     }
 
-    public int countAround(int index) {
+    public int countAround(int index) {// 주위 폭탄 수 계산
         int bombCount = 0;
-        int[] arounds = new int[] {
-                getLeftUp(index), getUp(index), getRightUp(index), getLeft(index), getRight(index),
-                getLeftDown(index), getDown(index), getRightDown(index)
-        };
+        arounds = getArounds(index);
         for (int i = 0; i < 8; i++) {
-            if (isValidIndex(arounds[i]) && bombMap[arounds[i]]) {
+            if (isValidIndex(arounds[i], index) && bombMap[arounds[i]]) {
                 bombCount++;
             }
         }
         return bombCount;
     }
 
-    private boolean isValidIndex(int index) {
-        return index >= 0 && index < totalCellCount;
+    public int[] getArounds(int index) {
+        return new int[]{
+                getLeftUp(index), getUp(index), getRightUp(index), getLeft(index), getRight(index),
+                getLeftDown(index), getDown(index), getRightDown(index)
+        };
+    }
+
+    public boolean isValidIndex(int index, int origin) {
+        boolean valid = index >= 0 && index < totalCellCount;
+        int indCol = index % columnCount;
+        int oriCol = origin % columnCount;
+        if (!valid) {
+            return false;
+        }
+        else if (oriCol == 0) {
+            if (indCol == columnCount - 1) {
+                return false;
+            }
+        }
+        else if (oriCol == columnCount - 1) {
+            if (indCol == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private int getLeftUp(int index) {
@@ -94,7 +119,7 @@ public class Game {
         return index + columnCount + 1;
     }
 
-    public void setImage(ImageButton ib, int index) {
+    public void setImage(ImageButton ib, int index) {// 칸에 따라 숫자나 폭탄 보여줌
         if (bombMap[index]) {
             ib.setImageResource(R.drawable.bomb);
         }
@@ -128,5 +153,27 @@ public class Game {
                 ib.setImageResource(R.drawable.eight);
             }
         }
+        opened[index] = true;
+    }
+
+    public boolean isOpened(int index) {
+        return opened[index];
+    }
+
+    public boolean isAroundOpened(int index) {
+        arounds = getArounds(index);
+        for (int i = 0; i < 8; i++) {
+            int current = arounds[i];
+            if (isValidIndex(current, index)) {
+                if (!opened[current]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean isBomb(int index) {
+        return bombMap[index];
     }
 }
