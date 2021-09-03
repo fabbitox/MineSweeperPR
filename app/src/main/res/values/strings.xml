@@ -6,4 +6,5 @@
     <string name="start_text">시작하기</string>
     <string name="restart_text">다시시작</string>
     <string name="blank"> </string>
+    <string name="flag">깃발</string>
 </resources>

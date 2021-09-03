@@ -1,7 +1,5 @@
 package com.first.minesweeperpr;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -13,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -38,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         EditText bombInput = findViewById(R.id.bomb_input);
         Button startBtn = findViewById(R.id.start_btn);
         Button restartBtn = findViewById(R.id.restart_btn);
+        View root = findViewById(R.id.root);
+        root.setBackgroundColor(0xcceeddff);// 배경 색
 
         int columnMin = 5;
         int rowMin = 8;
@@ -116,10 +114,19 @@ public class MainActivity extends AppCompatActivity {
                 int index = i * columnCount + j;
                 ImageButton ib = new ImageButton(this);
                 ib.setLayoutParams(lp);
-                ib.setBackgroundColor(0xffffffff);// 안 연 셀 색
+                ib.setBackgroundColor(0x99faf5ff);// 안 연 셀 색
                 ib.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ib.setImageResource(R.drawable.blank);
-                ib.setOnClickListener(v -> reveal((ImageButton) v, index));
+                ib.setOnClickListener(v -> open((ImageButton)v, index));
+                ib.setOnLongClickListener(v -> {
+                    if (game.isOpened(index)) {
+                        openArounds((ImageButton)v, index);
+                    }
+                    else {
+                        toggleFlag((ImageButton)v);
+                    }
+                    return true;
+                });
                 row.addView(ib);
             }
         }
@@ -130,24 +137,78 @@ public class MainActivity extends AppCompatActivity {
         board.setY(spaceHeight >> 1);
     }
 
-    private void reveal(ImageButton ib, int index) {// 주위에 폭탄 없을 때 자동으로 열어주기
-        ib.setBackgroundColor(0xffddeeff);// 연 셀 색
+    private void open(ImageButton ib, int index) {// 셀 열기
+        ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
         int aroundBomb = game.countAround(index);
-        if (aroundBomb == 0) {// 주위 열어야 할 셀들 등록
-            arounds = game.getArounds(index);
+        if (aroundBomb == 0 && !game.isBomb(index)) {// 주위에 폭탄 없을 때, 폭탄일 때는 게임 종료니까 따로
+            arounds = game.getArounds(index);// 주위 셀 자동으로 열어주는 기능
             for (int i = 0; i < 8; i++) {
                 int around = arounds[i];
                 if (game.isValidIndex(around, index)) {
                     if (!game.isOpened(around)) {
-                        toBeOpen.add(around);
+                        toBeOpen.add(around);// 주위 열어야 할 셀들 등록
                     }
                 }
             }
         }
+        openQueue();
+    }
+
+    private void openQueue() {// 많으면 뻗음
         while (!toBeOpen.isEmpty()) {// 열어줌
-            int i = toBeOpen.poll();
-            reveal(getIbByIndex(i), i);
+            int index = toBeOpen.poll();
+            open(getIbByIndex(index), index);
+        }
+    }
+
+    private void toggleFlag(ImageButton ib) {
+        boolean flagState = getFlagState(ib);
+        if (flagState) {// 깃발 꽂은 상태 -> 지우기
+            ib.setImageResource(R.drawable.blank);
+            ib.setTag(R.string.flag, false);
+        }
+        else {// 깃발 없는 상태 -> 깃발
+            ib.setImageResource(R.drawable.flag);
+            ib.setTag(R.string.flag, true);
+        }
+    }
+
+    private boolean getFlagState(ImageButton ib) {
+        boolean flagState;
+        Object tag = ib.getTag(R.string.flag);
+        if (tag != null) {// 상태 불러오기
+            flagState = (boolean)tag;
+        }
+        else {
+            flagState = false;
+        }
+        return flagState;
+    }
+
+    private void openArounds(ImageButton ib, int index) {
+        arounds = game.getArounds(index);
+        int flagCount = 0;
+        int bombCount = game.countAround(index);
+        for (int i = 0; i < 8; i++) {// 주위 깃발 수 세기
+            int around = arounds[i];
+            if (game.isValidIndex(around, index)) {
+                if (getFlagState(getIbByIndex(around))) {
+                    flagCount++;
+                }
+            }
+        }
+        if (flagCount == bombCount) {// 깃발 수가 맞으면
+            for (int i = 0; i < 8; i++) {
+                int around = arounds[i];
+                ImageButton currIb = getIbByIndex(around);
+                if (game.isValidIndex(around, index)) {
+                    if (!getFlagState(currIb)) {
+                        toBeOpen.add(around);
+                    }
+                }
+            }
+            openQueue();
         }
     }
 
