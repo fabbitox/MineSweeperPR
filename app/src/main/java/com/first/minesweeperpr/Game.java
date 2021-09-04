@@ -152,7 +152,6 @@ public class Game {
                 ib.setImageResource(R.drawable.eight);
             }
         }
-        opened[index] = true;
     }
 
     public boolean isOpened(int index) {

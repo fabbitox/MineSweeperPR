@@ -117,10 +117,15 @@ public class MainActivity extends AppCompatActivity {
                 ib.setBackgroundColor(0x99faf5ff);// 안 연 셀 색
                 ib.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ib.setImageResource(R.drawable.blank);
-                ib.setOnClickListener(v -> open((ImageButton)v, index));
+                ib.setOnClickListener(v -> {
+                    ImageButton currIb = (ImageButton)v;
+                    if (!getFlagState(currIb)) {
+                        open((ImageButton) v, index);
+                    }
+                });
                 ib.setOnLongClickListener(v -> {
                     if (game.isOpened(index)) {
-                        openArounds(index);
+                        openAroundsWithFlag(index);
                     }
                     else {
                         toggleFlag((ImageButton)v);
@@ -140,11 +145,12 @@ public class MainActivity extends AppCompatActivity {
     private void open(ImageButton ib, int index) {// 셀 열기
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
-        int aroundBomb = game.countAround(index);
-        openArounds(index, aroundBomb);
+        game.setOpened(index);
+        openArounds(index);
     }
 
-    private void openArounds(int index, int aroundBomb) {
+    private void openArounds(int index) {
+        int aroundBomb = game.countAround(index);
         if (aroundBomb == 0 && !game.isBomb(index)) {// 주위에 폭탄 없을 때, 폭탄일 때는 게임 종료니까 따로
             arounds = game.getArounds(index);// 주위 셀 자동으로 열어주는 기능
             for (int i = 0; i < 8; i++) {
@@ -172,12 +178,10 @@ public class MainActivity extends AppCompatActivity {
         if (flagState) {// 깃발 꽂은 상태 -> 지우기
             ib.setImageResource(R.drawable.blank);
             ib.setTag(R.string.flag, false);
-            ib.setEnabled(true);
         }
         else {// 깃발 없는 상태 -> 깃발
             ib.setImageResource(R.drawable.flag);
             ib.setTag(R.string.flag, true);
-            ib.setEnabled(false);
         }
     }
 
@@ -193,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         return flagState;
     }
 
-    private void openArounds(int index) {
+    private void openAroundsWithFlag(int index) {
         arounds = game.getArounds(index);
         int flagCount = 0;
         int bombCount = game.countAround(index);
