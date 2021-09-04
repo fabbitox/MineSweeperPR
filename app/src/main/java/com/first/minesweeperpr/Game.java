@@ -120,7 +120,7 @@ public class Game {
 
     public void setImage(ImageButton ib, int index) {// 칸에 따라 숫자나 폭탄 보여줌
         if (bombMap[index]) {
-            ib.setImageResource(R.drawable.bomb);
+            ib.setImageResource(R.drawable.exploded);
         }
         else {
             int aroundBomb = countAround(index);

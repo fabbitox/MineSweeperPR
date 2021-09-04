@@ -119,15 +119,15 @@ public class MainActivity extends AppCompatActivity {
                 ib.setImageResource(R.drawable.blank);
                 ib.setOnClickListener(v -> {
                     ImageButton currIb = (ImageButton)v;
-                    if (!getFlagState(currIb)) {
+                    if (!getFlagState(currIb)) {// 깃발 표시 안 했을 때
                         open((ImageButton) v, index);
                     }
                 });
                 ib.setOnLongClickListener(v -> {
-                    if (game.isOpened(index)) {
-                        openAroundsWithFlag(index);
+                    if (game.isOpened(index)) {// 열린 셀이면
+                        openAroundsWithFlag(index);// 깃발 수가 폭탄 수와 맞을 때 깃발 이외의 주위 셀을 열어 줌
                     }
-                    else {
+                    else {// 안 열린 셀이면 깃발을 표시하거나 없앰
                         toggleFlag((ImageButton)v);
                     }
                     return true;
@@ -212,9 +212,8 @@ public class MainActivity extends AppCompatActivity {
         if (flagCount == bombCount) {// 깃발 수가 맞으면
             for (int i = 0; i < 8; i++) {
                 int around = arounds[i];
-                ImageButton currIb = getIbByIndex(around);
                 if (game.isValidIndex(around, index)) {
-                    if (!getFlagState(currIb)) {
+                    if (!getFlagState(getIbByIndex(around))) {
                         toBeOpen.add(around);
                     }
                 }
@@ -223,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private ImageButton getIbByIndex(int index) {
+    private ImageButton getIbByIndex(int index) {// index에 해당하는 이미지 버튼 return
         int columnCount = game.columnCount;
         int row = index / columnCount;
         int column = index % columnCount;
