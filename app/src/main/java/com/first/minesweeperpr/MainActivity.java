@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 ib.setOnClickListener(v -> open((ImageButton)v, index));
                 ib.setOnLongClickListener(v -> {
                     if (game.isOpened(index)) {
-                        openArounds((ImageButton)v, index);
+                        openArounds(index);
                     }
                     else {
                         toggleFlag((ImageButton)v);
@@ -141,6 +141,10 @@ public class MainActivity extends AppCompatActivity {
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
         int aroundBomb = game.countAround(index);
+        openArounds(index, aroundBomb);
+    }
+
+    private void openArounds(int index, int aroundBomb) {
         if (aroundBomb == 0 && !game.isBomb(index)) {// 주위에 폭탄 없을 때, 폭탄일 때는 게임 종료니까 따로
             arounds = game.getArounds(index);// 주위 셀 자동으로 열어주는 기능
             for (int i = 0; i < 8; i++) {
@@ -148,17 +152,18 @@ public class MainActivity extends AppCompatActivity {
                 if (game.isValidIndex(around, index)) {
                     if (!game.isOpened(around)) {
                         toBeOpen.add(around);// 주위 열어야 할 셀들 등록
+                        game.setOpened(around);
                     }
                 }
             }
+            openQueue();
         }
-        openQueue();
     }
 
-    private void openQueue() {// 많으면 뻗음
-        while (!toBeOpen.isEmpty()) {// 열어줌
-            int index = toBeOpen.poll();
-            open(getIbByIndex(index), index);
+    private void openQueue() {
+        while (!toBeOpen.isEmpty()) {// 빈 상태에서는 실행 안 되기 때문에 NullPointer 날 리가 없음
+            @SuppressWarnings("ConstantConditions") int index = toBeOpen.poll();
+            open(getIbByIndex(index), index);// 열어줌
         }
     }
 
@@ -167,10 +172,12 @@ public class MainActivity extends AppCompatActivity {
         if (flagState) {// 깃발 꽂은 상태 -> 지우기
             ib.setImageResource(R.drawable.blank);
             ib.setTag(R.string.flag, false);
+            ib.setEnabled(true);
         }
         else {// 깃발 없는 상태 -> 깃발
             ib.setImageResource(R.drawable.flag);
             ib.setTag(R.string.flag, true);
+            ib.setEnabled(false);
         }
     }
 
@@ -186,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         return flagState;
     }
 
-    private void openArounds(ImageButton ib, int index) {
+    private void openArounds(int index) {
         arounds = game.getArounds(index);
         int flagCount = 0;
         int bombCount = game.countAround(index);

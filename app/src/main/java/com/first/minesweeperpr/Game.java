@@ -71,20 +71,19 @@ public class Game {
         boolean valid = index >= 0 && index < totalCellCount;
         int indCol = index % columnCount;
         int oriCol = origin % columnCount;
+
+        int rightEnd = columnCount - 1;
+        boolean isOriLeft = oriCol == 0;
+        boolean isIndLeft = indCol == 0;
+        boolean isOriRight = oriCol == rightEnd;
+        boolean isIndRight = indCol == rightEnd;
         if (!valid) {
             return false;
         }
-        else if (oriCol == 0) {
-            if (indCol == columnCount - 1) {
-                return false;
-            }
+        else if (isOriLeft && isIndRight) {
+            return false;
         }
-        else if (oriCol == columnCount - 1) {
-            if (indCol == 0) {
-                return false;
-            }
-        }
-        return true;
+        else return !isOriRight || !isIndLeft;// simplified, else if (&&) {false} true
     }
 
     private int getLeftUp(int index) {
@@ -160,17 +159,8 @@ public class Game {
         return opened[index];
     }
 
-    public boolean isAroundOpened(int index) {
-        arounds = getArounds(index);
-        for (int i = 0; i < 8; i++) {
-            int current = arounds[i];
-            if (isValidIndex(current, index)) {
-                if (!opened[current]) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    public void setOpened(int index) {
+        opened[index] = true;
     }
 
     public boolean isBomb(int index) {
