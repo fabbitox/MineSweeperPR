@@ -138,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
         // 보드가 중앙에 오도록
         int spaceWidth = boardWidth - buttonSize * columnCount;
         int spaceHeight = boardHeight - buttonSize * rowCount;
-        board.setX(board.getX() + (spaceWidth >> 1));
-        board.setY(spaceHeight >> 1);
+        board.setX(board.getLeft() + (spaceWidth >> 1));
+        board.setY(board.getTop() + (spaceHeight >> 1));
     }
 
     private void open(ImageButton ib, int index) {// 셀 열기

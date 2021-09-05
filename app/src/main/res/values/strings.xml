@@ -7,4 +7,5 @@
     <string name="restart_text">다시시작</string>
     <string name="blank"> </string>
     <string name="flag">깃발</string>
+    <string name="count_3digit_sample">000</string>
 </resources>
