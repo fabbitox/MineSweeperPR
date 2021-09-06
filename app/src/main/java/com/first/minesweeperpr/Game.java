@@ -21,7 +21,6 @@ public class Game {
     private int bombLeft;
     private int totalCellCount;
     private boolean[] bombMap;// 지뢰 있으면 true
-    private int[] arounds;// 주위 셀
     private boolean[] opened;// 열린 셀리면 true
 
     public void positionBomb(int column, int row, int bomb) {// 지뢰 위치 랜덤으로 생성
@@ -51,16 +50,16 @@ public class Game {
 
     public int countAround(int index) {// 주위 폭탄 수 계산
         int bombCount = 0;
-        arounds = getArounds(index);
+        int[] adjCells = getAdjacentCells(index);// 주위 셀
         for (int i = 0; i < 8; i++) {
-            if (isValidIndex(arounds[i], index) && bombMap[arounds[i]]) {
+            if (isValidIndex(adjCells[i], index) && bombMap[adjCells[i]]) {
                 bombCount++;
             }
         }
         return bombCount;
     }
 
-    public int[] getArounds(int index) {
+    public int[] getAdjacentCells(int index) {
         return new int[]{
                 getLeftUp(index), getUp(index), getRightUp(index), getLeft(index), getRight(index),
                 getLeftDown(index), getDown(index), getRightDown(index)

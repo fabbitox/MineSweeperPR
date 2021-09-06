@@ -121,27 +121,32 @@
         app:cornerRadius="10dp" />
 
     <TextView
-        android:id="@+id/leftedBombCount"
+        android:id="@+id/remained_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_marginStart="85dp"
         android:layout_marginBottom="10dp"
         android:text="@string/count_3digit_sample"
+        android:textAlignment="center"
         android:textColor="#6600CC"
-        android:textSize="36sp" />
+        android:textSize="36sp"
+        android:visibility="invisible"
+        tools:ignore="RtlCompat" />
 
     <TextView
-        android:id="@+id/explodedBombCount"
+        android:id="@+id/exploded_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="10dp"
         android:text="@string/count_3digit_sample"
+        android:textAlignment="center"
         android:textColor="#9933FF"
         android:textSize="36sp"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        tools:ignore="RtlCompat" />
 
     <TextView
         android:id="@+id/time"
@@ -151,8 +156,10 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:text="@string/count_3digit_sample"
+        android:textAlignment="center"
         android:textColor="#6600CC"
         android:textSize="36sp"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        tools:ignore="RtlCompat" />
 
 </FrameLayout>

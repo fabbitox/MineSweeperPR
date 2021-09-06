@@ -10,17 +10,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity {
+    private Game game;
     private TableLayout board;
     private int boardWidth;
     private int boardHeight;
-    private Game game;
-    private int[] arounds;
+    private int[] adjCells;
     private Queue<Integer> toBeOpen;
+    private int remainedBombCount;
+    private TextView remainedTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         Button restartBtn = findViewById(R.id.restart_btn);
         View root = findViewById(R.id.root);
         root.setBackgroundColor(0xcceeddff);// 배경 색
+        remainedTv = findViewById(R.id.remained_count);
 
         int columnMin = 5;
         int rowMin = 8;
@@ -73,16 +77,20 @@ public class MainActivity extends AppCompatActivity {
                 boolean bombSmaller = bomb < bombMin;
                 if (bombBigger) bomb = bombMax;
                 else if (bombSmaller) bomb = bombMin;
+                remainedBombCount = bomb;// 남은 폭탄 수 설정
 
                 fillBoard(column, row, bomb);
                 valueInput.setVisibility(View.INVISIBLE);
                 restartBtn.setVisibility(View.VISIBLE);
+                remainedTv.setText(String.valueOf(remainedBombCount));
+                remainedTv.setVisibility(View.VISIBLE);
             }
         });
         // 초기화해서 다시 시작할 수 있도록
         restartBtn.setOnClickListener(v -> {
             valueInput.setVisibility(View.VISIBLE);
             restartBtn.setVisibility(View.INVISIBLE);
+            remainedTv.setVisibility(View.INVISIBLE);
             board.removeAllViews();
             columnInput.setText("");
             rowInput.setText("");
@@ -125,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 ib.setOnLongClickListener(v -> {
                     if (game.isOpened(index)) {// 열린 셀이면
-                        openAroundsWithFlag(index);// 깃발 수가 폭탄 수와 맞을 때 깃발 이외의 주위 셀을 열어 줌
+                        openAdjWithFlag(index);// 깃발 수가 폭탄 수와 맞을 때 깃발 이외의 주위 셀을 열어 줌
                     }
                     else {// 안 열린 셀이면 깃발을 표시하거나 없앰
                         toggleFlag((ImageButton)v);
@@ -146,15 +154,15 @@ public class MainActivity extends AppCompatActivity {
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
         game.setOpened(index);
-        openArounds(index);
+        openAdjacentCells(index);
     }
 
-    private void openArounds(int index) {
+    private void openAdjacentCells(int index) {
         int aroundBomb = game.countAround(index);
         if (aroundBomb == 0 && !game.isBomb(index)) {// 주위에 폭탄 없을 때, 폭탄일 때는 게임 종료니까 따로
-            arounds = game.getArounds(index);// 주위 셀 자동으로 열어주는 기능
+            adjCells = game.getAdjacentCells(index);// 주위 셀 자동으로 열어주는 기능
             for (int i = 0; i < 8; i++) {
-                int around = arounds[i];
+                int around = adjCells[i];
                 if (game.isValidIndex(around, index)) {
                     if (!game.isOpened(around)) {
                         toBeOpen.add(around);// 주위 열어야 할 셀들 등록
@@ -178,11 +186,14 @@ public class MainActivity extends AppCompatActivity {
         if (flagState) {// 깃발 꽂은 상태 -> 지우기
             ib.setImageResource(R.drawable.blank);
             ib.setTag(R.string.flag, false);
+            remainedBombCount++;
         }
         else {// 깃발 없는 상태 -> 깃발
             ib.setImageResource(R.drawable.flag);
             ib.setTag(R.string.flag, true);
+            remainedBombCount--;
         }
+        remainedTv.setText(String.valueOf(remainedBombCount));// 폭탄 수 업데이트
     }
 
     private boolean getFlagState(ImageButton ib) {
@@ -197,12 +208,12 @@ public class MainActivity extends AppCompatActivity {
         return flagState;
     }
 
-    private void openAroundsWithFlag(int index) {
-        arounds = game.getArounds(index);
+    private void openAdjWithFlag(int index) {
+        adjCells = game.getAdjacentCells(index);
         int flagCount = 0;
         int bombCount = game.countAround(index);
         for (int i = 0; i < 8; i++) {// 주위 깃발 수 세기
-            int around = arounds[i];
+            int around = adjCells[i];
             if (game.isValidIndex(around, index)) {
                 if (getFlagState(getIbByIndex(around))) {
                     flagCount++;
@@ -211,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (flagCount == bombCount) {// 깃발 수가 맞으면
             for (int i = 0; i < 8; i++) {
-                int around = arounds[i];
+                int around = adjCells[i];
                 if (game.isValidIndex(around, index)) {
                     if (!getFlagState(getIbByIndex(around))) {
                         toBeOpen.add(around);
@@ -222,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private ImageButton getIbByIndex(int index) {// index에 해당하는 이미지 버튼 return
+    private ImageButton getIbByIndex(int index) {// 해당하는 index 이미지 버튼 return
         int columnCount = game.columnCount;
         int row = index / columnCount;
         int column = index % columnCount;
