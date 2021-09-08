@@ -154,24 +154,24 @@ public class MainActivity extends AppCompatActivity {
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
         game.setOpened(index);
-        openAdjacentCells(index);
-    }
-
-    private void openAdjacentCells(int index) {
         int aroundBomb = game.countAround(index);
         if (aroundBomb == 0 && !game.isBomb(index)) {// 주위에 폭탄 없을 때, 폭탄일 때는 게임 종료니까 따로
-            adjCells = game.getAdjacentCells(index);// 주위 셀 자동으로 열어주는 기능
-            for (int i = 0; i < 8; i++) {
-                int around = adjCells[i];
-                if (game.isValidIndex(around, index)) {
-                    if (!game.isOpened(around)) {
-                        toBeOpen.add(around);// 주위 열어야 할 셀들 등록
-                        game.setOpened(around);
-                    }
+            openAdjCells(index);
+        }
+    }
+
+    private void openAdjCells(int index) {// 주위 셀 자동으로 열어주는 기능
+        adjCells = game.getAdjacentCells(index);
+        for (int i = 0; i < 8; i++) {
+            int around = adjCells[i];
+            if (game.isValidIndex(around, index)) {
+                if (!game.isOpened(around)) {
+                    toBeOpen.add(around);// 주위 열어야 할 셀들 등록
+                    game.setOpened(around);
                 }
             }
-            openQueue();
         }
+        openQueue();
     }
 
     private void openQueue() {
