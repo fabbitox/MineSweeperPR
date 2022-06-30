@@ -123,32 +123,34 @@ public class Game {
         }
         else {
             int aroundBomb = countAround(index);
-            if (aroundBomb == 0) {
-                ib.setImageResource(R.drawable.blank);
-            }
-            else if (aroundBomb == 1) {
-                ib.setImageResource(R.drawable.one);
-            }
-            else if (aroundBomb == 2) {
-                ib.setImageResource(R.drawable.two);
-            }
-            else if (aroundBomb == 3) {
-                ib.setImageResource(R.drawable.three);
-            }
-            else if (aroundBomb == 4) {
-                ib.setImageResource(R.drawable.four);
-            }
-            else if (aroundBomb == 5) {
-                ib.setImageResource(R.drawable.five);
-            }
-            else if (aroundBomb == 6) {
-                ib.setImageResource(R.drawable.six);
-            }
-            else if (aroundBomb == 7) {
-                ib.setImageResource(R.drawable.seven);
-            }
-            else {
-                ib.setImageResource(R.drawable.eight);
+            switch (aroundBomb) {
+                case 0:
+                    ib.setImageResource(R.drawable.blank);
+                    break;
+                case 1:
+                    ib.setImageResource(R.drawable.one);
+                    break;
+                case 2:
+                    ib.setImageResource(R.drawable.two);
+                    break;
+                case 3:
+                    ib.setImageResource(R.drawable.three);
+                    break;
+                case 4:
+                    ib.setImageResource(R.drawable.four);
+                    break;
+                case 5:
+                    ib.setImageResource(R.drawable.five);
+                    break;
+                case 6:
+                    ib.setImageResource(R.drawable.six);
+                    break;
+                case 7:
+                    ib.setImageResource(R.drawable.seven);
+                    break;
+                case 8:
+                    ib.setImageResource(R.drawable.eight);
+                    break;
             }
         }
     }

@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private Queue<Integer> toBeOpen;
     private int remainedBombCount;
     private TextView remainedTv;
+    private boolean overFlag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,69 +34,95 @@ public class MainActivity extends AppCompatActivity {
 
         board = findViewById(R.id.board);
         View valueInput = findViewById(R.id.value_input);
-        EditText columnInput = findViewById(R.id.column_input);
-        EditText rowInput = findViewById(R.id.row_input);
-        EditText bombInput = findViewById(R.id.bomb_input);
+        TextView colText = findViewById(R.id.column_text);
+        TextView rowText = findViewById(R.id.row_text);
+        TextView bombText = findViewById(R.id.bomb_text);
+        SeekBar colBar = findViewById(R.id.column_bar);
+        SeekBar rowBar = findViewById(R.id.row_bar);
+        SeekBar bombBar = findViewById(R.id.bomb_bar);
         Button startBtn = findViewById(R.id.start_btn);
         Button restartBtn = findViewById(R.id.restart_btn);
         View root = findViewById(R.id.root);
         root.setBackgroundColor(0xcceeddff);// 배경 색
         remainedTv = findViewById(R.id.remained_count);
-
-        int columnMin = 5;
-        int rowMin = 8;
-        int bombMin = 4;
-        int columnMax = 20;
-        int rowMax = 32;
+        overFlag = false;
 
         game = Game.getInstance();
         toBeOpen = new LinkedList<>();
 
+        final int[] counts = {16, 16, 40};
+
+        colBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                colText.setText(String.valueOf(progress + 5));
+                counts[0] = progress + 5;
+                bombBar.setMax(counts[0] * counts[1] - 14);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        rowBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                rowText.setText(String.valueOf(progress + 8));
+                counts[1] = progress + 8;
+                bombBar.setMax(counts[0] * counts[1] - 14);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        bombBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                bombText.setText(String.valueOf(progress + 4));
+                counts[2] = progress + 4;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         startBtn.setOnClickListener(v -> {
             getBoardSize();
             // 값 받기
-            String columnStr = columnInput.getText().toString();
-            String rowStr = rowInput.getText().toString();
-            String bombStr = bombInput.getText().toString();
-            // 값이 있을 때
-            if (!columnStr.equals("") && !rowStr.equals("") && !bombStr.equals("")) {
-                int column = Integer.parseInt(columnStr);
-                int row = Integer.parseInt(rowStr);
-                int bomb = Integer.parseInt(bombStr);
-                // 값이 범위 내인지
-                boolean columnBigger = column > columnMax;
-                boolean rowBigger = row > rowMax;
-                boolean columnSmaller = column < columnMin;
-                boolean rowSmaller = row < rowMin;
-                // 범위 밖이면 조절
-                if (columnBigger) column = columnMax;
-                else if (columnSmaller) column = columnMin;
-                if (rowBigger) row = rowMax;
-                else if (rowSmaller) row = rowMin;
-                // 폭탄 수
-                int bombMax = column * row - 10;
-                boolean bombBigger = bomb > bombMax;
-                boolean bombSmaller = bomb < bombMin;
-                if (bombBigger) bomb = bombMax;
-                else if (bombSmaller) bomb = bombMin;
-                remainedBombCount = bomb;// 남은 폭탄 수 설정
-
-                fillBoard(column, row, bomb);
-                valueInput.setVisibility(View.INVISIBLE);
-                restartBtn.setVisibility(View.VISIBLE);
-                remainedTv.setText(String.valueOf(remainedBombCount));
-                remainedTv.setVisibility(View.VISIBLE);
-            }
+            fillBoard(counts[0], counts[1], counts[2]);
+            remainedBombCount = counts[2];
+            valueInput.setVisibility(View.INVISIBLE);
+            restartBtn.setVisibility(View.VISIBLE);
+            remainedTv.setText(String.valueOf(remainedBombCount));
+            remainedTv.setVisibility(View.VISIBLE);
         });
         // 초기화해서 다시 시작할 수 있도록
         restartBtn.setOnClickListener(v -> {
             valueInput.setVisibility(View.VISIBLE);
             restartBtn.setVisibility(View.INVISIBLE);
             remainedTv.setVisibility(View.INVISIBLE);
+            overFlag = false;
             board.removeAllViews();
-            columnInput.setText("");
-            rowInput.setText("");
-            bombInput.setText("");
         });
     }
 
@@ -128,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 ib.setOnClickListener(v -> {
                     ImageButton currIb = (ImageButton)v;
                     if (!getFlagState(currIb)) {// 깃발 표시 안 했을 때
-                        open((ImageButton) v, index);
+                        open(currIb, index);
                     }
                 });
                 ib.setOnLongClickListener(v -> {
@@ -155,7 +183,10 @@ public class MainActivity extends AppCompatActivity {
         game.setImage(ib, index);
         game.setOpened(index);
         int aroundBomb = game.countAround(index);
-        if (aroundBomb == 0 && !game.isBomb(index)) {// 주위에 폭탄 없을 때, 폭탄일 때는 게임 종료니까 따로
+        if (game.isBomb(index)) {
+            overFlag = true;
+        }
+        if (aroundBomb == 0) {
             openAdjCells(index);
         }
     }

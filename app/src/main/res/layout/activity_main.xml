@@ -25,18 +25,16 @@
                 android:id="@+id/column_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:text="@string/column_text"
                 android:textColor="#6600CC" />
 
-            <EditText
-                android:id="@+id/column_input"
-                android:layout_width="wrap_content"
+            <SeekBar
+                android:id="@+id/column_bar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:labelFor="@id/column_input"
-                android:textColor="#6600CC"
-                android:textColorHint="#6600CC" />
+                android:max="15" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -49,18 +47,16 @@
                 android:id="@+id/row_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:text="@string/row_text"
                 android:textColor="#6600CC" />
 
-            <EditText
-                android:id="@+id/row_input"
-                android:layout_width="wrap_content"
+            <SeekBar
+                android:id="@+id/row_bar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:labelFor="@id/row_input"
-                android:textColor="#6600CC"
-                android:textColorHint="#6600CC" />
+                android:max="24" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -73,18 +69,16 @@
                 android:id="@+id/bomb_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:text="@string/bomb_text"
                 android:textColor="#6600CC" />
 
-            <EditText
-                android:id="@+id/bomb_input"
-                android:layout_width="wrap_content"
+            <SeekBar
+                android:id="@+id/bomb_bar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:labelFor="@id/bomb_input"
-                android:textColor="#6600CC"
-                android:textColorHint="#6600CC" />
+                android:max="626" />
+
         </LinearLayout>
 
         <Button
@@ -125,12 +119,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
-        android:layout_marginStart="85dp"
+        android:layout_marginStart="80dp"
         android:layout_marginBottom="10dp"
         android:text="@string/count_3digit_sample"
         android:textAlignment="center"
         android:textColor="#6600CC"
-        android:textSize="36sp"
+        android:textSize="32sp"
         android:visibility="invisible"
         tools:ignore="RtlCompat" />
 
@@ -144,7 +138,7 @@
         android:text="@string/count_3digit_sample"
         android:textAlignment="center"
         android:textColor="#9933FF"
-        android:textSize="36sp"
+        android:textSize="32sp"
         android:visibility="invisible"
         tools:ignore="RtlCompat" />
 
