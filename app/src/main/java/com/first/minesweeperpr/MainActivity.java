@@ -2,11 +2,13 @@ package com.first.minesweeperpr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -27,13 +29,16 @@ public class MainActivity extends AppCompatActivity {
     private boolean overFlag;
 
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // findViewById
         board = findViewById(R.id.board);
         View valueInput = findViewById(R.id.value_input);
+        RadioGroup level = findViewById(R.id.level);
         TextView colText = findViewById(R.id.column_text);
         TextView rowText = findViewById(R.id.row_text);
         TextView mineText = findViewById(R.id.mine_text);
@@ -43,15 +48,33 @@ public class MainActivity extends AppCompatActivity {
         Button startBtn = findViewById(R.id.start_btn);
         Button restartBtn = findViewById(R.id.restart_btn);
         View root = findViewById(R.id.root);
-        root.setBackgroundColor(0xcceeddff);// 배경 색
         remainedTv = findViewById(R.id.remained_count);
-        overFlag = false;
 
+        overFlag = false;
+        root.setBackgroundColor(0xcceeddff);// 배경 색
         game = Game.getInstance();
         toBeOpen = new LinkedList<>();
-
         final int[] counts = {5, 8, 4};
 
+        level.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.easy:
+                    colBar.setProgress(4); // 9
+                    rowBar.setProgress(1); // 9
+                    mineBar.setProgress(6); // 10
+                    break;
+                case R.id.normal:
+                    colBar.setProgress(11); // 16
+                    rowBar.setProgress(8); // 16
+                    mineBar.setProgress(36); // 40
+                    break;
+                case R.id.hard:
+                    colBar.setProgress(11); // 16
+                    rowBar.setProgress(22); // 30
+                    mineBar.setProgress(95); // 99
+                    break;
+            }
+        });
         colBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {

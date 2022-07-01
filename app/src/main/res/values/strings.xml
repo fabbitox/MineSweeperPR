@@ -9,4 +9,7 @@
     <string name="flag">깃발</string>
     <string name="count_3digit_sample">000</string>
     <string name="mine_text_format">지뢰: %d(%.2f%%)</string>
+    <string name="easy_text">쉬움</string>
+    <string name="normal_text">보통</string>
+    <string name="hard_text">어려움</string>
 </resources>

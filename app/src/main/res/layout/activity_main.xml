@@ -15,6 +15,32 @@
         android:layout_marginTop="20dp"
         android:orientation="vertical">
 
+        <RadioGroup
+            android:id="@+id/level"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/easy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/easy_text" />
+
+            <RadioButton
+                android:id="@+id/normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/normal_text" />
+
+            <RadioButton
+                android:id="@+id/hard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hard_text" />
+        </RadioGroup>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -114,8 +140,8 @@
         android:id="@+id/remained_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_marginStart="80dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginEnd="100dp"
         android:layout_marginBottom="10dp"
         android:text="@string/count_3digit_sample"
         android:textAlignment="center"
