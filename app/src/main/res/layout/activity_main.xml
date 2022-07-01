@@ -77,7 +77,7 @@
                 android:id="@+id/mine_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="626" />
+                android:max="242" />
 
         </LinearLayout>
 
