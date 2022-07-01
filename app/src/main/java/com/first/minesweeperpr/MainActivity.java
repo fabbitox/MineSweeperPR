@@ -50,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
         game = Game.getInstance();
         toBeOpen = new LinkedList<>();
 
-        final int[] counts = {16, 16, 40};
+        final int[] counts = {5, 8, 4};
 
         colBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                colText.setText(String.valueOf(progress + 5));
+                colText.setText(String.format("가로: %s", (progress + 5)));
                 counts[0] = progress + 5;
                 mineBar.setMax(counts[0] * counts[1] - 14);
             }
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         rowBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rowText.setText(String.valueOf(progress + 8));
+                rowText.setText(String.format("세로: %s", progress + 8));
                 counts[1] = progress + 8;
                 mineBar.setMax(counts[0] * counts[1] - 14);
             }
@@ -91,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
         mineBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mineText.setText(String.valueOf(progress + 4));
                 counts[2] = progress + 4;
+                double mineRate = (double)counts[2] / counts[0] / counts[1] * 100;
+                mineText.setText(String.format(getString(R.string.mine_text_format), progress + 4, mineRate));
             }
 
             @Override
