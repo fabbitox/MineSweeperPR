@@ -18,45 +18,45 @@ public class Game {
 
     private final Random random = new Random();
     public int columnCount;
-    private int bombLeft;
+    private int mineLeft;
     private int totalCellCount;
-    private boolean[] bombMap;// 지뢰 있으면 true
+    private boolean[] mineMap;// 지뢰 있으면 true
     private boolean[] opened;// 열린 셀리면 true
 
-    public void positionBomb(int column, int row, int bomb) {// 지뢰 위치 랜덤으로 생성
-        initialize(column, row, bomb);
-        int bombIndex;
-        while (bombLeft > 0) {
-            bombIndex = random.nextInt(totalCellCount);
-            if (!bombMap[bombIndex]) {
-                bombMap[bombIndex] = true;
-                bombLeft--;
+    public void positionMine(int column, int row, int mine) {// 지뢰 위치 랜덤으로 생성
+        initialize(column, row, mine);
+        int mineIndex;
+        while (mineLeft > 0) {
+            mineIndex = random.nextInt(totalCellCount);
+            if (!mineMap[mineIndex]) {
+                mineMap[mineIndex] = true;
+                mineLeft--;
             }
         }
     }
 
-    private void initialize(int column, int row, int bomb) {// 초기화
+    private void initialize(int column, int row, int mine) {// 초기화
         columnCount = column;
         totalCellCount = column * row;
-        bombLeft = bomb;
-        bombMap = new boolean[totalCellCount];
+        mineLeft = mine;
+        mineMap = new boolean[totalCellCount];
         opened = new boolean[totalCellCount];
         for (int i = 0; i < totalCellCount; i++) {
-            bombMap[i] = false;
+            mineMap[i] = false;
             opened[i] = false;
         }
         random.setSeed(currentTimeMillis());
     }
 
     public int countAround(int index) {// 주위 폭탄 수 계산
-        int bombCount = 0;
+        int mineCount = 0;
         int[] adjCells = getAdjacentCells(index);// 주위 셀
         for (int i = 0; i < 8; i++) {
-            if (isValidIndex(adjCells[i], index) && bombMap[adjCells[i]]) {
-                bombCount++;
+            if (isValidIndex(adjCells[i], index) && mineMap[adjCells[i]]) {
+                mineCount++;
             }
         }
-        return bombCount;
+        return mineCount;
     }
 
     public int[] getAdjacentCells(int index) {
@@ -118,12 +118,12 @@ public class Game {
     }
 
     public void setImage(ImageButton ib, int index) {// 칸에 따라 숫자나 폭탄 보여줌
-        if (bombMap[index]) {
+        if (mineMap[index]) {
             ib.setImageResource(R.drawable.exploded);
         }
         else {
-            int aroundBomb = countAround(index);
-            switch (aroundBomb) {
+            int aroundMine = countAround(index);
+            switch (aroundMine) {
                 case 0:
                     ib.setImageResource(R.drawable.blank);
                     break;
@@ -163,7 +163,7 @@ public class Game {
         opened[index] = true;
     }
 
-    public boolean isBomb(int index) {
-        return bombMap[index];
+    public boolean isMine(int index) {
+        return mineMap[index];
     }
 }

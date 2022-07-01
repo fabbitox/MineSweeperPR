@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">MinesweeperPR</string>
-    <string name="column_text">행</string>
-    <string name="row_text">열</string>
-    <string name="bomb_text">지뢰</string>
+    <string name="column_text">가로</string>
+    <string name="row_text">세로</string>
+    <string name="mine_text">지뢰</string>
     <string name="start_text">시작하기</string>
     <string name="restart_text">다시시작</string>
     <string name="blank"> </string>
