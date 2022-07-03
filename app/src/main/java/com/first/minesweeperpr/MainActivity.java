@@ -25,9 +25,12 @@ public class MainActivity extends AppCompatActivity {
     private int[] adjCells;
     private Queue<Integer> toBeOpen;
     private int remainedCount;
+    private int explodedCount;
     private TextView remainedTv;
+    private TextView explodedTv;
     private boolean overFlag;
-
+    private int foundIndex;
+    private boolean finishFlag;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -49,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Button restartBtn = findViewById(R.id.restart_btn);
         View root = findViewById(R.id.root);
         remainedTv = findViewById(R.id.remained_count);
+        explodedTv = findViewById(R.id.exploded_count);
 
         overFlag = false;
         root.setBackgroundColor(0xcceeddff);// 배경 색
@@ -59,19 +63,19 @@ public class MainActivity extends AppCompatActivity {
         level.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.easy:
-                    colBar.setProgress(4); // 9
-                    rowBar.setProgress(1); // 9
-                    mineBar.setProgress(6); // 10
+                    colBar.setProgress(4);// 9
+                    rowBar.setProgress(1);// 9
+                    mineBar.setProgress(6);// 10
                     break;
                 case R.id.normal:
-                    colBar.setProgress(11); // 16
-                    rowBar.setProgress(8); // 16
-                    mineBar.setProgress(36); // 40
+                    colBar.setProgress(11);// 16
+                    rowBar.setProgress(8);// 16
+                    mineBar.setProgress(36);// 40
                     break;
                 case R.id.hard:
-                    colBar.setProgress(11); // 16
-                    rowBar.setProgress(22); // 30
-                    mineBar.setProgress(95); // 99
+                    colBar.setProgress(11);// 16
+                    rowBar.setProgress(22);// 30
+                    mineBar.setProgress(95);// 99
                     break;
             }
         });
@@ -135,17 +139,23 @@ public class MainActivity extends AppCompatActivity {
             // 값 받기
             fillBoard(counts[0], counts[1], counts[2]);
             remainedCount = counts[2];
+            explodedCount = 0;
             valueInput.setVisibility(View.INVISIBLE);
             restartBtn.setVisibility(View.VISIBLE);
             remainedTv.setText(String.valueOf(remainedCount));
             remainedTv.setVisibility(View.VISIBLE);
+            explodedTv.setText(String.valueOf(explodedCount));
+            explodedTv.setVisibility(View.VISIBLE);
         });
         // 초기화해서 다시 시작할 수 있도록
         restartBtn.setOnClickListener(v -> {
             valueInput.setVisibility(View.VISIBLE);
             restartBtn.setVisibility(View.INVISIBLE);
             remainedTv.setVisibility(View.INVISIBLE);
+            explodedTv.setVisibility(View.INVISIBLE);
             overFlag = false;
+            foundIndex = 0;
+            finishFlag = false;
             board.removeAllViews();
         });
     }
@@ -206,9 +216,17 @@ public class MainActivity extends AppCompatActivity {
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
         game.setOpened(index);
+        foundIndex = game.foundTo(foundIndex);
+        if (foundIndex == -1) {
+            finishFlag = true;
+        }
         int aroundMine = game.countAround(index);
         if (game.isMine(index)) {
             overFlag = true;
+            remainedCount--;
+            remainedTv.setText(String.valueOf(remainedCount));
+            explodedCount++;
+            explodedTv.setText(String.valueOf(explodedCount));
         }
         if (aroundMine == 0) {
             openAdjCells(index);

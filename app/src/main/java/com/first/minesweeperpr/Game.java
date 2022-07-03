@@ -166,4 +166,17 @@ public class Game {
     public boolean isMine(int index) {
         return mineMap[index];
     }
+
+    public int foundTo(int index) {
+        if (index != -1) {
+            for (int i = index; i < totalCellCount; i++) {
+                if (!isMine(i)) {
+                    if (!isOpened(i)) {
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
 }
