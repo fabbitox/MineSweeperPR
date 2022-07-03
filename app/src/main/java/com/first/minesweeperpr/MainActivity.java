@@ -220,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
         if (foundIndex == -1) {
             finishFlag = true;
         }
-        int aroundMine = game.countAround(index);
         if (game.isMine(index)) {
             overFlag = true;
             remainedCount--;
@@ -228,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             explodedCount++;
             explodedTv.setText(String.valueOf(explodedCount));
         }
-        if (aroundMine == 0) {
+        else if (game.countAround(index) == 0) {
             openAdjCells(index);
         }
     }
@@ -289,6 +288,9 @@ public class MainActivity extends AppCompatActivity {
             int around = adjCells[i];
             if (game.isValidIndex(around, index)) {
                 if (getFlagState(getIbByIndex(around))) {
+                    flagCount++;
+                }
+                if (game.isMine(around) && game.isOpened(around)) {
                     flagCount++;
                 }
             }
