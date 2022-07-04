@@ -1,18 +1,19 @@
 package com.first.minesweeperpr;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -38,10 +39,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // hide navigation bar
+        View decorView = getWindow().getDecorView();
+        int systemUiVis = decorView.getSystemUiVisibility();
+        systemUiVis |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        systemUiVis |= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            systemUiVis |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+        decorView.setSystemUiVisibility(systemUiVis);
+
         // findViewById
         board = findViewById(R.id.board);
         View valueInput = findViewById(R.id.value_input);
-        RadioGroup level = findViewById(R.id.level);
         TextView colText = findViewById(R.id.column_text);
         TextView rowText = findViewById(R.id.row_text);
         TextView mineText = findViewById(R.id.mine_text);
@@ -60,25 +70,24 @@ public class MainActivity extends AppCompatActivity {
         toBeOpen = new LinkedList<>();
         final int[] counts = {5, 8, 4};
 
-        level.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.easy:
-                    colBar.setProgress(4);// 9
-                    rowBar.setProgress(1);// 9
-                    mineBar.setProgress(6);// 10
-                    break;
-                case R.id.normal:
-                    colBar.setProgress(11);// 16
-                    rowBar.setProgress(8);// 16
-                    mineBar.setProgress(36);// 40
-                    break;
-                case R.id.hard:
-                    colBar.setProgress(11);// 16
-                    rowBar.setProgress(22);// 30
-                    mineBar.setProgress(95);// 99
-                    break;
-            }
+        // 난이도 선택
+        findViewById(R.id.easy).setOnClickListener(v -> {
+            colBar.setProgress(4);// 9
+            rowBar.setProgress(1);// 9
+            mineBar.setProgress(6);// 10
         });
+        findViewById(R.id.normal).setOnClickListener(v -> {
+            colBar.setProgress(11);// 16
+            rowBar.setProgress(8);// 16
+            mineBar.setProgress(36);// 40
+        });
+        findViewById(R.id.hard).setOnClickListener(v -> {
+            colBar.setProgress(11);// 16
+            rowBar.setProgress(22);// 30
+            mineBar.setProgress(95);// 99
+        });
+
+        // SeekBar 값과 TextView, 변수 상호작용
         colBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -219,6 +228,17 @@ public class MainActivity extends AppCompatActivity {
         foundIndex = game.foundTo(foundIndex);
         if (foundIndex == -1) {
             finishFlag = true;
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+            alertBuilder.setTitle("finish");
+            String message;
+            if (overFlag) {
+                message = explodedCount + "회의 실수로";
+            }
+            else {
+                message = "실수 없이";
+            }
+            alertBuilder.setMessage(message + " 지뢰가 없는 곳을 모두 찾아냈습니다!");
+            alertBuilder.show();
         }
         if (game.isMine(index)) {
             overFlag = true;
