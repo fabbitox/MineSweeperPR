@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         View root = findViewById(R.id.root);
         remainedTv = findViewById(R.id.remained_count);
         explodedTv = findViewById(R.id.exploded_count);
+        View gameUi = findViewById(R.id.for_game);
 
         overFlag = false;
         root.setBackgroundColor(0xcceeddff);// 배경 색
@@ -150,18 +151,14 @@ public class MainActivity extends AppCompatActivity {
             remainedCount = counts[2];
             explodedCount = 0;
             valueInput.setVisibility(View.INVISIBLE);
-            restartBtn.setVisibility(View.VISIBLE);
+            gameUi.setVisibility(View.VISIBLE);
             remainedTv.setText(String.valueOf(remainedCount));
-            remainedTv.setVisibility(View.VISIBLE);
             explodedTv.setText(String.valueOf(explodedCount));
-            explodedTv.setVisibility(View.VISIBLE);
         });
         // 초기화해서 다시 시작할 수 있도록
         restartBtn.setOnClickListener(v -> {
             valueInput.setVisibility(View.VISIBLE);
-            restartBtn.setVisibility(View.INVISIBLE);
-            remainedTv.setVisibility(View.INVISIBLE);
-            explodedTv.setVisibility(View.INVISIBLE);
+            gameUi.setVisibility(View.INVISIBLE);
             overFlag = false;
             foundIndex = 0;
             finishFlag = false;
