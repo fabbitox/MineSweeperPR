@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 colText.setText(String.format("가로: %s", (progress + 5)));
                 counts[0] = progress + 5;
-                mineBar.setMax(counts[0] * counts[1] - 14);
+                mineBar.setMax(counts[0] * counts[1] / 5 * 2);
             }
 
             @Override
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 rowText.setText(String.format("세로: %s", progress + 8));
                 counts[1] = progress + 8;
-                mineBar.setMax(counts[0] * counts[1] - 14);
+                mineBar.setMax(counts[0] * counts[1] / 5 * 2);
             }
 
             @Override
@@ -127,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
         mineBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                counts[2] = progress + 4;
+                counts[2] = progress + counts[0] * counts[1] / 20;
                 double mineRate = (double)counts[2] / counts[0] / counts[1] * 100;
-                mineText.setText(String.format(getString(R.string.mine_text_format), progress + 4, mineRate));
+                mineText.setText(String.format(getString(R.string.mine_text_format), counts[2], mineRate));
             }
 
             @Override

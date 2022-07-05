@@ -2,7 +2,7 @@
     <string name="app_name">MinesweeperPR</string>
     <string name="column_text">가로: 5</string>
     <string name="row_text">세로: 8</string>
-    <string name="mine_text">지뢰: 4(10.00%)</string>
+    <string name="mine_text">지뢰: 2(5.00%)</string>
     <string name="start_text">시작하기</string>
     <string name="restart_text">다시시작</string>
     <string name="blank"> </string>
