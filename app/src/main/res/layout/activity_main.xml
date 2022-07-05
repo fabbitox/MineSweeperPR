@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:max="242" />
+            android:max="16" />
 
         <Button
             android:id="@+id/start_btn"
@@ -138,11 +138,12 @@
 
     <TextView
         android:id="@+id/remained_count"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginEnd="100dp"
+        android:layout_marginEnd="84dp"
         android:layout_marginBottom="10dp"
+        android:gravity="center"
         android:text="@string/count_3digit_sample"
         android:textAlignment="center"
         android:textColor="#6600CC"
@@ -152,11 +153,12 @@
 
     <TextView
         android:id="@+id/exploded_count"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_marginStart="10dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginEnd="152dp"
         android:layout_marginBottom="10dp"
+        android:gravity="center"
         android:text="@string/count_3digit_sample"
         android:textAlignment="center"
         android:textColor="#9933FF"
