@@ -137,23 +137,22 @@
 
         <TextView
             android:id="@+id/exploded_count"
-            android:layout_width="60dp"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:text="@string/count_3digit_sample"
             android:textAlignment="center"
             android:textColor="#9933FF"
-            android:textSize="32sp"
+            android:textSize="28sp"
             tools:ignore="RtlCompat" />
 
         <TextView
             android:id="@+id/remained_count"
-            android:layout_width="60dp"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:text="@string/count_3digit_sample"
             android:textAlignment="center"
             android:textColor="#6600CC"
-            android:textSize="32sp"
+            android:textSize="28sp"
             tools:ignore="RtlCompat" />
 
         <Button
@@ -169,9 +168,8 @@
 
         <ImageButton
             android:id="@+id/flag_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="#00FFFFFF"
             android:contentDescription="@string/flag"
             android:scaleType="fitXY"
@@ -180,12 +178,12 @@
 
         <TextView
             android:id="@+id/time"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:text="@string/count_3digit_sample"
             android:textAlignment="center"
             android:textColor="#6600CC"
-            android:textSize="32sp"
+            android:textSize="28sp"
             tools:ignore="RtlCompat" />
     </LinearLayout>
 
