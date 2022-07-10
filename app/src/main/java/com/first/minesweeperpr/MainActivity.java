@@ -11,6 +11,7 @@ import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView explodedTv;
     private boolean overFlag;
     private int foundIndex;
-    private boolean finishFlag;
+    private boolean flagChecked;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         remainedTv = findViewById(R.id.remained_count);
         explodedTv = findViewById(R.id.exploded_count);
         View gameUi = findViewById(R.id.for_game);
+        ImageButton flagBtn = findViewById(R.id.flag_btn);
 
         overFlag = false;
         root.setBackgroundColor(0xcceeddff);// 배경 색
@@ -161,8 +163,19 @@ public class MainActivity extends AppCompatActivity {
             gameUi.setVisibility(View.INVISIBLE);
             overFlag = false;
             foundIndex = 0;
-            finishFlag = false;
             board.removeAllViews();
+        });
+
+        flagBtn.setOnClickListener(v -> {
+            ImageButton ib = (ImageButton)v;
+            if (flagChecked) {
+                flagChecked = false;
+                ib.setImageResource(R.drawable.mine);
+            }
+            else {
+                flagChecked = true;
+                ib.setImageResource(R.drawable.flag);
+            }
         });
     }
 
@@ -224,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
         game.setOpened(index);
         foundIndex = game.foundTo(foundIndex);
         if (foundIndex == -1) {
-            finishFlag = true;
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
             alertBuilder.setTitle("finish");
             String message;
