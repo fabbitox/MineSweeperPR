@@ -11,7 +11,6 @@ import android.widget.SeekBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -208,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 ib.setImageResource(R.drawable.blank);
                 ib.setOnClickListener(v -> {
                     ImageButton currIb = (ImageButton)v;
-                    if (!getFlagState(currIb)) {// 깃발 표시 안 했을 때
+                    if (!getFlagState(currIb) || flagChecked) {// 깃발 표시 안 했거나 깃발 모드일 때
                         open(currIb, index);
                     }
                 });
@@ -236,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         game.setImage(ib, index);
         game.setOpened(index);
         foundIndex = game.foundTo(foundIndex);
-        if (foundIndex == -1) {
+        if (foundIndex == -1) {// game is finished
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
             alertBuilder.setTitle("finish");
             String message;
@@ -249,12 +248,17 @@ public class MainActivity extends AppCompatActivity {
             alertBuilder.setMessage(message + " 지뢰가 없는 곳을 모두 찾아냈습니다!");
             alertBuilder.show();
         }
-        if (game.isMine(index)) {
+        if (flagChecked) {
+            toggleFlag(ib);
+            ib.setEnabled(true);
+        }
+        else if (game.isMine(index)) {
             overFlag = true;
             remainedCount--;
             remainedTv.setText(String.valueOf(remainedCount));
             explodedCount++;
             explodedTv.setText(String.valueOf(explodedCount));
+            ib.setEnabled(false);
         }
         else if (game.countAround(index) == 0) {
             openAdjCells(index);
