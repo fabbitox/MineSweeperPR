@@ -254,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
     private void open(ImageButton ib, int index) {// 셀 열기
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
+        game.setOpened(index);
         foundIndex = game.foundTo(foundIndex);
         if (foundIndex == -1) {// game is finished
             timer.cancel();
@@ -281,7 +282,6 @@ public class MainActivity extends AppCompatActivity {
             };
             timer.schedule(timerTask, 0, 1000);
         }
-        game.setOpened(index);
         if (game.isMine(index)) {
             overFlag = true;
             remainedCount--;
