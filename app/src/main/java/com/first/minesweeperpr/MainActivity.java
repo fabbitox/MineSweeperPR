@@ -1,7 +1,6 @@
 package com.first.minesweeperpr;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     private Game game;
@@ -32,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
     private boolean overFlag;
     private int foundIndex;
     private boolean flagChecked;
+    private boolean firstFlag;
+    private Timer timer;
+    private int timerCount;
+    private TextView timerView;
+    private boolean quickMode;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -44,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         int systemUiVis = decorView.getSystemUiVisibility();
         systemUiVis |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         systemUiVis |= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            systemUiVis |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
+        systemUiVis |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(systemUiVis);
 
         // findViewById
@@ -65,12 +69,19 @@ public class MainActivity extends AppCompatActivity {
         explodedTv = findViewById(R.id.exploded_count);
         View gameUi = findViewById(R.id.for_game);
         ImageButton flagBtn = findViewById(R.id.flag_btn);
+        timerView = findViewById(R.id.time);
 
+        // initialize variables
         overFlag = false;
+        foundIndex = 0;
+        flagChecked = false;
+        firstFlag = true;
         root.setBackgroundColor(0xcceeddff);// 배경 색
         game = Game.getInstance();
         toBeOpen = new LinkedList<>();
         final int[] counts = {5, 8, 4};
+        timerCount = 0;
+        quickMode = false;
 
         // 난이도 선택
         findViewById(R.id.easy).setOnClickListener(v -> {
@@ -81,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.normal).setOnClickListener(v -> {
             colBar.setProgress(11);// 16
             rowBar.setProgress(8);// 16
-            mineBar.setProgress(36);// 40
+            mineBar.setProgress(28);// 40
         });
         findViewById(R.id.hard).setOnClickListener(v -> {
             colBar.setProgress(11);// 16
             rowBar.setProgress(22);// 30
-            mineBar.setProgress(95);// 99
+            mineBar.setProgress(75);// 99
         });
 
         // SeekBar 값과 TextView, 변수 상호작용
@@ -155,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
             gameUi.setVisibility(View.VISIBLE);
             remainedTv.setText(String.valueOf(remainedCount));
             explodedTv.setText(String.valueOf(explodedCount));
+            timerView.setText(String.valueOf(timerCount));
         });
         // 초기화해서 다시 시작할 수 있도록
         restartBtn.setOnClickListener(v -> {
@@ -162,6 +174,12 @@ public class MainActivity extends AppCompatActivity {
             gameUi.setVisibility(View.INVISIBLE);
             overFlag = false;
             foundIndex = 0;
+            flagChecked = false;
+            flagBtn.setImageResource(R.drawable.mine);
+            firstFlag = true;
+            timerCount = 0;
+            timerView.setText(String.valueOf(timerCount));
+            if (timer != null) timer.cancel();
             board.removeAllViews();
         });
 
@@ -207,7 +225,10 @@ public class MainActivity extends AppCompatActivity {
                 ib.setImageResource(R.drawable.blank);
                 ib.setOnClickListener(v -> {
                     ImageButton currIb = (ImageButton)v;
-                    if (!getFlagState(currIb) || flagChecked) {// 깃발 표시 안 했거나 깃발 모드일 때
+                    if (flagChecked) {// flag mode
+                        openF(currIb, index);
+                    }
+                    else if (!getFlagState(currIb)) {// 깃발 표시 안 했을 때
                         open(currIb, index);
                     }
                 });
@@ -233,9 +254,9 @@ public class MainActivity extends AppCompatActivity {
     private void open(ImageButton ib, int index) {// 셀 열기
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
         game.setImage(ib, index);
-        game.setOpened(index);
         foundIndex = game.foundTo(foundIndex);
         if (foundIndex == -1) {// game is finished
+            timer.cancel();
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
             alertBuilder.setTitle("finish");
             String message;
@@ -245,14 +266,23 @@ public class MainActivity extends AppCompatActivity {
             else {
                 message = "실수 없이";
             }
-            alertBuilder.setMessage(message + " 지뢰가 없는 곳을 모두 찾아냈습니다!");
+            alertBuilder.setMessage(message + " 지뢰가 없는 곳을 " + timerCount + " 초 만에 모두 찾아냈습니다!");
             alertBuilder.show();
         }
-        if (flagChecked) {
-            toggleFlag(ib);
-            ib.setEnabled(true);
+        if (firstFlag) {// start timer
+            timer = new Timer();
+            firstFlag = false;
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    timerCount++;
+                    timerView.setText(String.valueOf(timerCount));
+                }
+            };
+            timer.schedule(timerTask, 0, 1000);
         }
-        else if (game.isMine(index)) {
+        game.setOpened(index);
+        if (game.isMine(index)) {
             overFlag = true;
             remainedCount--;
             remainedTv.setText(String.valueOf(remainedCount));
@@ -262,6 +292,17 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (game.countAround(index) == 0) {
             openAdjCells(index);
+        }
+    }
+
+    private void openF(ImageButton ib, int index) {
+        if (game.isOpened(index)) {
+            quickMode = true;
+            openAdjWithFlag(index);
+            quickMode = false;
+        }
+        else if (!quickMode) {
+            toggleFlag(ib);
         }
     }
 
@@ -319,11 +360,11 @@ public class MainActivity extends AppCompatActivity {
         int mineCount = game.countAround(index);
         for (int i = 0; i < 8; i++) {// 주위 깃발 수 세기
             int around = adjCells[i];
-            if (game.isValidIndex(around, index)) {
+            if (game.isValidIndex(around, index)) {// 깃발 표시
                 if (getFlagState(getIbByIndex(around))) {
                     flagCount++;
                 }
-                if (game.isMine(around) && game.isOpened(around)) {
+                else if (game.isMine(around) && game.isOpened(around)) {// 터뜨린 폭탄
                     flagCount++;
                 }
             }
@@ -332,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < 8; i++) {
                 int around = adjCells[i];
                 if (game.isValidIndex(around, index)) {
-                    if (!getFlagState(getIbByIndex(around))) {
+                    if (!getFlagState(getIbByIndex(around)) && !game.isOpened(around)) {
                         toBeOpen.add(around);
                     }
                 }
