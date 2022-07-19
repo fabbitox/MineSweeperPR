@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView explodedTv;
     private boolean overFlag;
     private int foundIndex;
+    private boolean finishFlag;
     private boolean flagChecked;
     private boolean firstFlag;
     private Timer timer;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         overFlag = false;
         foundIndex = 0;
         flagChecked = false;
+        finishFlag = false;
         firstFlag = true;
         root.setBackgroundColor(0xcceeddff);// 배경 색
         game = Game.getInstance();
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
             foundIndex = 0;
             flagChecked = false;
             flagBtn.setImageResource(R.drawable.mine);
+            finishFlag = false;
             firstFlag = true;
             timerCount = 0;
             timerView.setText(String.valueOf(timerCount));
@@ -256,7 +259,8 @@ public class MainActivity extends AppCompatActivity {
         game.setImage(ib, index);
         game.setOpened(index);
         foundIndex = game.foundTo(foundIndex);
-        if (foundIndex == -1) {// game is finished
+        if (foundIndex == -1 && !finishFlag) {// game is finished
+            finishFlag = true;
             timer.cancel();
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
             alertBuilder.setTitle("finish");
