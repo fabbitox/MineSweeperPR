@@ -39,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private int timerCount;
     private TextView timerView;
     private boolean quickMode;
+    private boolean pauseFlag;
+    private View valueInput;
+    private View gameUi;
+    private ImageButton flagBtn;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         // findViewById
         board = findViewById(R.id.board);
-        View valueInput = findViewById(R.id.value_input);
+        valueInput = findViewById(R.id.value_input);
         TextView colText = findViewById(R.id.column_text);
         TextView rowText = findViewById(R.id.row_text);
         TextView mineText = findViewById(R.id.mine_text);
@@ -68,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
         View root = findViewById(R.id.root);
         remainedTv = findViewById(R.id.remained_count);
         explodedTv = findViewById(R.id.exploded_count);
-        View gameUi = findViewById(R.id.for_game);
-        ImageButton flagBtn = findViewById(R.id.flag_btn);
+        gameUi = findViewById(R.id.for_game);
+        flagBtn = findViewById(R.id.flag_btn);
         timerView = findViewById(R.id.time);
 
         // initialize variables
@@ -84,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         final int[] counts = {5, 8, 4};
         timerCount = 0;
         quickMode = false;
+        pauseFlag = false;
 
         // 난이도 선택
         findViewById(R.id.easy).setOnClickListener(v -> {
@@ -171,20 +176,7 @@ public class MainActivity extends AppCompatActivity {
             timerView.setText(String.valueOf(timerCount));
         });
         // 초기화해서 다시 시작할 수 있도록
-        restartBtn.setOnClickListener(v -> {
-            valueInput.setVisibility(View.VISIBLE);
-            gameUi.setVisibility(View.INVISIBLE);
-            overFlag = false;
-            foundIndex = 0;
-            flagChecked = false;
-            flagBtn.setImageResource(R.drawable.mine);
-            finishFlag = false;
-            firstFlag = true;
-            timerCount = 0;
-            timerView.setText(String.valueOf(timerCount));
-            if (timer != null) timer.cancel();
-            board.removeAllViews();
-        });
+        restartBtn.setOnClickListener(v -> restartSetting(valueInput, gameUi, flagBtn));
 
         flagBtn.setOnClickListener(v -> {
             ImageButton ib = (ImageButton)v;
@@ -197,6 +189,21 @@ public class MainActivity extends AppCompatActivity {
                 ib.setImageResource(R.drawable.flag);
             }
         });
+    }
+
+    private void restartSetting(View valueInput, View gameUi, ImageButton flagBtn) {
+        valueInput.setVisibility(View.VISIBLE);
+        gameUi.setVisibility(View.INVISIBLE);
+        overFlag = false;
+        foundIndex = 0;
+        flagChecked = false;
+        flagBtn.setImageResource(R.drawable.mine);
+        finishFlag = false;
+        firstFlag = true;
+        timerCount = 0;
+        timerView.setText(String.valueOf(timerCount));
+        if (timer != null) timer.cancel();
+        board.removeAllViews();
     }
 
     private void getBoardSize() {
@@ -280,14 +287,28 @@ public class MainActivity extends AppCompatActivity {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    timerCount++;
-                    timerView.setText(String.valueOf(timerCount));
+                    if (!pauseFlag) {
+                        timerCount++;
+                        timerView.setText(String.valueOf(timerCount));
+                    }
                 }
             };
             timer.schedule(timerTask, 0, 1000);
         }
         if (game.isMine(index)) {
-            overFlag = true;
+            if (!overFlag) {
+                overFlag = true;
+                pauseFlag = true;
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertBuilder.setTitle("game over");
+                alertBuilder.setMessage("지뢰를 터뜨렸습니다! 계속 하시겠습니까?");
+                alertBuilder.setPositiveButton("계속", (dialog, which) -> pauseFlag = false);
+                alertBuilder.setNegativeButton("종료", (dialog, which) -> {
+                    timer.cancel();
+                    restartSetting(valueInput, gameUi, flagBtn);
+                });
+                alertBuilder.show();
+            }
             remainedCount--;
             remainedTv.setText(String.valueOf(remainedCount));
             explodedCount++;
