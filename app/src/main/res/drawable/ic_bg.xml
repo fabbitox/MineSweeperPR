@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="151dp"
+    android:height="134dp"
+    android:viewportWidth="151"
+    android:viewportHeight="134">
+  <path
+      android:pathData="M129,69C129,33.65 100.35,5 65,5C29.65,5 1,33.65 1,69C1,104.35 29.65,133 65,133C100.35,133 129,104.35 129,69ZM129,69"
+      android:fillColor="#000000"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M93.97,64.55C125.97,32.55 133.97,40.55 133.97,36.55C133.97,32.55 125.97,16.55 93.97,64.55"
+      android:fillColor="#000000"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M107.54,42.33C107.54,10.33 115.54,2.33 122.21,0.99C128.88,-0.34 134.21,4.99 132.88,11.66C131.54,18.33 123.54,26.33 107.54,42.33"
+      android:fillColor="#000000"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+  <path
+      android:pathData="M91.54,58.33C123.54,26.33 131.54,34.33 138.21,32.99C144.88,31.66 150.21,20.99 150.21,15.66C150.21,10.33 144.88,10.33 134.29,15.83C123.69,21.33 107.84,32.33 91.54,58.33"
+      android:fillColor="#000000"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+</vector>
