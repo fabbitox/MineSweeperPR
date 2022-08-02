@@ -1,5 +1,6 @@
 package com.first.minesweeperpr;
 
+import android.util.Log;
 import android.widget.ImageButton;
 import java.util.Random;
 import static java.lang.System.currentTimeMillis;
@@ -48,7 +49,7 @@ public class Game {
         random.setSeed(currentTimeMillis());
     }
 
-    public int countAround(int index) {// 주위 폭탄 수 계산
+    public int countAround(int index) {// 주위 지뢰 수 계산
         int mineCount = 0;
         int[] adjCells = getAdjacentCells(index);// 주위 셀
         for (int i = 0; i < 8; i++) {
@@ -117,7 +118,7 @@ public class Game {
         return index + columnCount + 1;
     }
 
-    public void setImage(ImageButton ib, int index) {// 칸에 따라 숫자나 폭탄 보여줌
+    public void setImage(ImageButton ib, int index) {// 칸에 따라 숫자나 지뢰 보여줌
         if (mineMap[index]) {
             ib.setImageResource(R.drawable.exploded);
         }
@@ -178,5 +179,40 @@ public class Game {
             }
         }
         return -1;
+    }
+
+    public void safeStart(int index) {
+        int minesToMove = 0;
+        if (isMine(index)) {
+            mineMap[index] = false;
+            minesToMove++;
+            Log.d("origin mine", String.valueOf(index));
+        }
+        int[] adjCells = getAdjacentCells(index);
+        for (int i = 0; i < 8; i++) {
+            if (isValidIndex(adjCells[i], index) && isMine(adjCells[i])) {
+                mineMap[adjCells[i]] = false;
+                minesToMove++;
+                Log.d("origin mine", String.valueOf(adjCells[i]));
+            }
+        }
+        int mineIndex;
+        while (minesToMove > 0) {
+            mineIndex = random.nextInt(totalCellCount);
+            boolean validMinePos = !mineMap[mineIndex];
+            if (validMinePos) {
+                for (int i = 0; i < 8; i++) {
+                    if (isValidIndex(adjCells[i], index) && mineIndex == adjCells[i]) {
+                        validMinePos = false;
+                        break;
+                    }
+                }
+            }
+            if (validMinePos) {
+                mineMap[mineIndex] = true;
+                Log.d("new mine", String.valueOf(mineIndex));
+                minesToMove--;
+            }
+        }
     }
 }

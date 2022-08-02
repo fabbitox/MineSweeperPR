@@ -2,6 +2,7 @@ package com.first.minesweeperpr;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -221,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         int buttonSize = Math.min(width, height);
         int i, j;
 
-        game.positionMine(columnCount, rowCount, mineCount);// 폭탄 위치 잡기
+        game.positionMine(columnCount, rowCount, mineCount);// 지뢰 위치 잡기
         for (i = 0; i < rowCount; i++) {
             TableRow row = new TableRow(this);
             board.addView(row);
@@ -244,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 ib.setOnLongClickListener(v -> {
                     if (game.isOpened(index)) {// 열린 셀이면
-                        openAdjWithFlag(index);// 깃발 수가 폭탄 수와 맞을 때 깃발 이외의 주위 셀을 열어 줌
+                        openAdjWithFlag(index);// 깃발 수가 지뢰 수와 맞을 때 깃발 이외의 주위 셀을 열어 줌
                     }
                     else {// 안 열린 셀이면 깃발을 표시하거나 없앰
                         toggleFlag((ImageButton)v);
@@ -263,8 +264,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void open(ImageButton ib, int index) {// 셀 열기
         ib.setBackgroundColor(0xddeeddff);// 연 셀 색
+        if (firstFlag) {// start timer
+            timer = new Timer();
+            firstFlag = false;
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    if (!pauseFlag) {
+                        timerCount++;
+                        timerView.setText(String.valueOf(timerCount));
+                    }
+                }
+            };
+            game.safeStart(index);
+            timer.schedule(timerTask, 0, 1000);
+        }
         game.setImage(ib, index);
         game.setOpened(index);
+        Log.d("open", String.valueOf(index));
         foundIndex = game.foundTo(foundIndex);
         if (foundIndex == -1 && !finishFlag) {// game is finished
             finishFlag = true;
@@ -278,22 +295,8 @@ public class MainActivity extends AppCompatActivity {
             else {
                 message = "실수 없이";
             }
-            alertBuilder.setMessage(message + " 지뢰가 없는 곳을 " + timerCount + " 초 만에 모두 찾아냈습니다!");
+            alertBuilder.setMessage(message + " 지뢰가 없는 곳을 " + timerCount + "초 만에 모두 찾아냈습니다!");
             alertBuilder.show();
-        }
-        if (firstFlag) {// start timer
-            timer = new Timer();
-            firstFlag = false;
-            TimerTask timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    if (!pauseFlag) {
-                        timerCount++;
-                        timerView.setText(String.valueOf(timerCount));
-                    }
-                }
-            };
-            timer.schedule(timerTask, 0, 1000);
         }
         if (game.isMine(index)) {
             if (!overFlag) {
@@ -364,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
             ib.setTag(R.string.flag, true);
             remainedCount--;
         }
-        remainedTv.setText(String.valueOf(remainedCount));// 폭탄 수 업데이트
+        remainedTv.setText(String.valueOf(remainedCount));// 지뢰 수 업데이트
     }
 
     private boolean getFlagState(ImageButton ib) {
@@ -389,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
                 if (getFlagState(getIbByIndex(around))) {
                     flagCount++;
                 }
-                else if (game.isMine(around) && game.isOpened(around)) {// 터뜨린 폭탄
+                else if (game.isMine(around) && game.isOpened(around)) {// 터뜨린 지뢰
                     flagCount++;
                 }
             }
