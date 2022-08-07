@@ -193,7 +193,6 @@ public class Game {
             if (isValidIndex(adjCells[i], index) && isMine(adjCells[i])) {
                 mineMap[adjCells[i]] = false;
                 minesToMove++;
-                Log.d("origin mine", String.valueOf(adjCells[i]));
             }
         }
         int mineIndex;
@@ -210,7 +209,6 @@ public class Game {
             }
             if (validMinePos) {
                 mineMap[mineIndex] = true;
-                Log.d("new mine", String.valueOf(mineIndex));
                 minesToMove--;
             }
         }

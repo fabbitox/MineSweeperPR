@@ -2,7 +2,6 @@ package com.first.minesweeperpr;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -177,7 +176,18 @@ public class MainActivity extends AppCompatActivity {
             timerView.setText(String.valueOf(timerCount));
         });
         // 초기화해서 다시 시작할 수 있도록
-        restartBtn.setOnClickListener(v -> restartSetting(valueInput, gameUi, flagBtn));
+        restartBtn.setOnClickListener(v -> {
+            pauseFlag = true;
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+            alertBuilder.setTitle("restart check");
+            alertBuilder.setMessage("다시 시작하시겠습니까?");
+            alertBuilder.setNegativeButton("아니오", (dialog, which) -> pauseFlag = false);
+            alertBuilder.setPositiveButton("예", (dialog, which) -> {
+                if (timer != null) timer.cancel();
+                restartSetting(valueInput, gameUi, flagBtn);
+            });
+            alertBuilder.show();
+        });
 
         flagBtn.setOnClickListener(v -> {
             ImageButton ib = (ImageButton)v;
@@ -281,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
         }
         game.setImage(ib, index);
         game.setOpened(index);
-        Log.d("open", String.valueOf(index));
         foundIndex = game.foundTo(foundIndex);
         if (foundIndex == -1 && !finishFlag) {// game is finished
             finishFlag = true;
