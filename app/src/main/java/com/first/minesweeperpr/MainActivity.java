@@ -1,6 +1,7 @@
 package com.first.minesweeperpr;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -69,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
         SeekBar mineBar = findViewById(R.id.mine_bar);
         Button startBtn = findViewById(R.id.start_btn);
         Button restartBtn = findViewById(R.id.restart_btn);
-        View root = findViewById(R.id.root);
         remainedTv = findViewById(R.id.remained_count);
         explodedTv = findViewById(R.id.exploded_count);
         gameUi = findViewById(R.id.for_game);
         flagBtn = findViewById(R.id.flag_btn);
         timerView = findViewById(R.id.time);
+        Button statisticsBtn = findViewById(R.id.statistics_btn);
 
         // initialize variables
         overFlag = false;
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         flagChecked = false;
         finishFlag = false;
         firstFlag = true;
-        root.setBackgroundColor(0xcceeddff);// 배경 색
         game = Game.getInstance();
         toBeOpen = new LinkedList<>();
         final int[] counts = {5, 8, 4};
@@ -200,12 +200,18 @@ public class MainActivity extends AppCompatActivity {
                 ib.setImageResource(R.drawable.flag);
             }
         });
+
+        statisticsBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), Statistics.class);
+            startActivity(intent);
+        });
     }
 
     private void restartSetting(View valueInput, View gameUi, ImageButton flagBtn) {
         valueInput.setVisibility(View.VISIBLE);
         gameUi.setVisibility(View.INVISIBLE);
         overFlag = false;
+        pauseFlag = false;
         foundIndex = 0;
         flagChecked = false;
         flagBtn.setImageResource(R.drawable.mine);

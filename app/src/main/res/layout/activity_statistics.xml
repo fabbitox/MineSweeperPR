@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CCEEDDFF"
+    android:orientation="vertical"
+    tools:context=".Statistics">
+
+    <LinearLayout
+        android:id="@+id/easy_sttt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/easy_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/easy_text"
+            android:textColor="#6600cc"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/easy_best"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/record"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/easy_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_played"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/easy_win"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/games_won"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/easy_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/winning_rate"
+            android:textColor="#333333" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/normal_sttt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/normal_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/normal_text"
+            android:textColor="#6600cc"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/normal_best"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/record"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/normal_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_played"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/normal_win"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/games_won"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/normal_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/winning_rate"
+            android:textColor="#333333" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hard_sttt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/hard_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/hard_text"
+            android:textColor="#6600cc"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/hard_best"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/record"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/hard_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_played"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/hard_win"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/games_won"
+            android:textColor="#333333" />
+
+        <TextView
+            android:id="@+id/hard_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/winning_rate"
+            android:textColor="#333333" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/del_rec_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="10dp"
+        android:background="#00FFFFFF"
+        android:contentDescription="@string/del_rec_text"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:scaleX="1.25"
+        android:scaleY="1.25"
+        app:srcCompat="@drawable/ic_baseline_delete_24" />
+
+</LinearLayout>

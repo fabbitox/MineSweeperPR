@@ -2,9 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
+    android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#CCEEDDFF"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -26,19 +27,22 @@
                 android:id="@+id/easy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/easy_text" />
+                android:text="@string/easy_text"
+                tools:ignore="TextContrastCheck" />
 
             <RadioButton
                 android:id="@+id/normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/normal_text" />
+                android:text="@string/normal_text"
+                tools:ignore="TextContrastCheck" />
 
             <RadioButton
                 android:id="@+id/hard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/hard_text" />
+                android:text="@string/hard_text"
+                tools:ignore="TextContrastCheck" />
         </RadioGroup>
 
         <LinearLayout
@@ -109,6 +113,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/start_text"
+            android:textColor="@color/white"
+            app:backgroundTint="#6600CC"
+            app:cornerRadius="10dp" />
+
+        <Button
+            android:id="@+id/statistics_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/statistics_text"
             android:textColor="@color/white"
             app:backgroundTint="#6600CC"
             app:cornerRadius="10dp" />

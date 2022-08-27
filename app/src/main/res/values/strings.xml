@@ -12,4 +12,10 @@
     <string name="easy_text">쉬움</string>
     <string name="normal_text">보통</string>
     <string name="hard_text">어려움</string>
+    <string name="statistics_text">게임통계</string>
+    <string name="record">최고기록</string>
+    <string name="total_played">전체 게임</string>
+    <string name="games_won">승리한 게임</string>
+    <string name="winning_rate">승률</string>
+    <string name="del_rec_text">기록 삭제</string>
 </resources>

@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/layout/activity_main.xml" value="0.12047101449275362" />
+        <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/layout/activity_main.xml" value="0.1953125" />
+        <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/layout/activity_statistics.xml" value="0.16666666666666666" />
+        <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.126" />
       </map>
     </option>
   </component>
