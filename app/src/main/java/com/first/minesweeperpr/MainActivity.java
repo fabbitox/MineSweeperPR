@@ -2,6 +2,7 @@ package com.first.minesweeperpr;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private View valueInput;
     private View gameUi;
     private ImageButton flagBtn;
+    private Level level;// for statistics
+    private SharedPreferences shp;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -89,22 +93,27 @@ public class MainActivity extends AppCompatActivity {
         timerCount = 0;
         quickMode = false;
         pauseFlag = false;
+        level = Level.CUSTOM;
+        shp = getSharedPreferences("statistics", MODE_PRIVATE);
 
         // 난이도 선택
         findViewById(R.id.easy).setOnClickListener(v -> {
             colBar.setProgress(4);// 9
             rowBar.setProgress(1);// 9
             mineBar.setProgress(6);// 10
+            level = Level.EASY;
         });
         findViewById(R.id.normal).setOnClickListener(v -> {
             colBar.setProgress(11);// 16
             rowBar.setProgress(8);// 16
             mineBar.setProgress(28);// 40
+            level = Level.NORMAL;
         });
         findViewById(R.id.hard).setOnClickListener(v -> {
             colBar.setProgress(11);// 16
             rowBar.setProgress(22);// 30
             mineBar.setProgress(75);// 99
+            level = Level.HARD;
         });
 
         // SeekBar 값과 TextView, 변수 상호작용
@@ -114,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 colText.setText(String.format("가로: %s", (progress + 5)));
                 counts[0] = progress + 5;
                 mineBar.setMax(counts[0] * counts[1] / 5 * 2);
+                level = Level.CUSTOM;
             }
 
             @Override
@@ -132,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 rowText.setText(String.format("세로: %s", progress + 8));
                 counts[1] = progress + 8;
                 mineBar.setMax(counts[0] * counts[1] / 5 * 2);
+                level = Level.CUSTOM;
             }
 
             @Override
@@ -150,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 counts[2] = progress + counts[0] * counts[1] / 20;
                 double mineRate = (double)counts[2] / counts[0] / counts[1] * 100;
                 mineText.setText(String.format(getString(R.string.mine_text_format), counts[2], mineRate));
+                level = Level.CUSTOM;
             }
 
             @Override
@@ -294,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
             };
             game.safeStart(index);
             timer.schedule(timerTask, 0, 1000);
+            increaseGameCount();
         }
         game.setImage(ib, index);
         game.setOpened(index);
@@ -308,7 +321,9 @@ public class MainActivity extends AppCompatActivity {
                 message = explodedCount + "회의 실수로";
             }
             else {
-                message = "실수 없이";
+                message = "승리!";
+                increaseWinCount();
+                updateBest(timerCount);
             }
             alertBuilder.setMessage(message + " 지뢰가 없는 곳을 " + timerCount + "초 만에 모두 찾아냈습니다!");
             alertBuilder.show();
@@ -431,5 +446,69 @@ public class MainActivity extends AppCompatActivity {
         int column = index % columnCount;
         TableRow tr = (TableRow)board.getChildAt(row);
         return (ImageButton)tr.getChildAt(column);
+    }
+
+    private void increaseGameCount() {
+        SharedPreferences.Editor editor = shp.edit();
+        String shp_key = null;
+        switch(level) {
+            case EASY:
+                shp_key = "easy_game";
+                break;
+            case NORMAL:
+                shp_key = "normal_game";
+                break;
+            case HARD:
+                shp_key = "hard_game";
+                break;
+        }
+        if (shp_key != null) {
+            editor.putInt(shp_key, shp.getInt(shp_key, 0) + 1);
+            editor.apply();
+        }
+    }
+
+    private void increaseWinCount() {
+        SharedPreferences.Editor editor = shp.edit();
+        String shp_key = null;
+        switch(level) {
+            case EASY:
+                shp_key = "easy_win";
+                break;
+            case NORMAL:
+                shp_key = "normal_win";
+                break;
+            case HARD:
+                shp_key = "hard_win";
+                break;
+        }
+        if (shp_key != null) {
+            editor.putInt(shp_key, shp.getInt(shp_key, 0) + 1);
+            editor.apply();
+        }
+    }
+
+    private void updateBest(int record) {
+        SharedPreferences.Editor editor = shp.edit();
+        String shp_key = null;
+        int old_rec;
+        switch(level) {
+            case EASY:
+                shp_key = "easy_best";
+                break;
+            case NORMAL:
+                shp_key = "normal_best";
+                break;
+            case HARD:
+                shp_key = "hard_best";
+                break;
+        }
+        if (shp_key != null) {
+            old_rec = shp.getInt(shp_key, -1);
+            if (old_rec == -1 || record < old_rec) {
+                editor.putInt(shp_key, record);
+                editor.apply();
+            }
+        }
     }
 }
