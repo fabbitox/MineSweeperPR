@@ -18,4 +18,5 @@
     <string name="games_won">승리한 게임</string>
     <string name="winning_rate">승률</string>
     <string name="del_rec_text">기록 삭제</string>
+    <string name="fraction">%.2f%%</string>
 </resources>
