@@ -17,12 +17,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.LinkedList;
-import java.util.Objects;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+
     private Game game;
     private TableLayout board;
     private int boardWidth;
@@ -190,15 +190,17 @@ public class MainActivity extends AppCompatActivity {
         // 초기화해서 다시 시작할 수 있도록
         restartBtn.setOnClickListener(v -> {
             pauseFlag = true;
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-            alertBuilder.setTitle("restart check");
-            alertBuilder.setMessage("다시 시작하시겠습니까?");
-            alertBuilder.setNegativeButton("아니오", (dialog, which) -> pauseFlag = false);
-            alertBuilder.setPositiveButton("예", (dialog, which) -> {
-                if (timer != null) timer.cancel();
+            if (!finishFlag) {
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                alertBuilder.setTitle("restart check");
+                alertBuilder.setMessage("다시 시작하시겠습니까?");
+                alertBuilder.setNegativeButton("아니요", (dialog, which) -> pauseFlag = false);
+                alertBuilder.setPositiveButton("예", (dialog, which) -> restartSetting(valueInput, gameUi, flagBtn));
+                alertBuilder.show();
+            }
+            else {
                 restartSetting(valueInput, gameUi, flagBtn);
-            });
-            alertBuilder.show();
+            }
         });
 
         flagBtn.setOnClickListener(v -> {
@@ -336,10 +338,7 @@ public class MainActivity extends AppCompatActivity {
                 alertBuilder.setTitle("game over");
                 alertBuilder.setMessage("지뢰를 터뜨렸습니다! 계속 하시겠습니까?");
                 alertBuilder.setPositiveButton("계속", (dialog, which) -> pauseFlag = false);
-                alertBuilder.setNegativeButton("종료", (dialog, which) -> {
-                    timer.cancel();
-                    restartSetting(valueInput, gameUi, flagBtn);
-                });
+                alertBuilder.setNegativeButton("종료", (dialog, which) -> restartSetting(valueInput, gameUi, flagBtn));
                 alertBuilder.show();
             }
             remainedCount--;
