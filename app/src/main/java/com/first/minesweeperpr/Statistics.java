@@ -35,21 +35,21 @@ public class Statistics extends AppCompatActivity {
         }
 
         for (int i = 0; i < 3; i++) {
-            String best_msg = "최고기록: ";
+            String best_msg = getString(R.string.best_str);
             if (best_recs[i] != -1) {
-                best_msg = best_msg + best_recs[i] + "초";
+                best_msg = best_msg + best_recs[i] + getString(R.string.second);
             }
             else {
                 best_msg = best_msg + "-";
             }
             best_tvs[i].setText(best_msg);
 
-            String total_msg = "전체 게임: " + total_recs[i];
+            String total_msg = getString(R.string.total_game_str) + total_recs[i];
             total_tvs[i].setText(total_msg);
-            String win_msg = "승리한 게임: " + win_recs[i];
+            String win_msg = getString(R.string.win_game_str) + win_recs[i];
             win_tvs[i].setText(win_msg);
 
-            String rate_msg = "승률: ";
+            String rate_msg = getString(R.string.win_rate_str);
             if (total_recs[i] != 0) {
                 double win_rate = (double)win_recs[i] / total_recs[i] * 100;
                 rate_msg = rate_msg + String.format(getString(R.string.fraction), win_rate);
@@ -63,10 +63,10 @@ public class Statistics extends AppCompatActivity {
         ImageButton delBtn = findViewById(R.id.del_rec_btn);
         delBtn.setOnClickListener(v -> {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(Statistics.this);
-            alertBuilder.setTitle("delete check");
-            alertBuilder.setMessage("기록을 삭제하시겠습니까?");
-            alertBuilder.setPositiveButton("예", (dialog, which) -> delete_recs(best_tvs, total_tvs, win_tvs, rate_tvs, shp, shp_keys));
-            alertBuilder.setNegativeButton("아니요", (dialog, which) -> {});
+            alertBuilder.setTitle("Delete check");
+            alertBuilder.setMessage(R.string.delete_check_msg);
+            alertBuilder.setPositiveButton(R.string.yes, (dialog, which) -> delete_recs(best_tvs, total_tvs, win_tvs, rate_tvs, shp, shp_keys));
+            alertBuilder.setNegativeButton(R.string.no, (dialog, which) -> {});
             alertBuilder.show();
         });
     }
@@ -79,10 +79,10 @@ public class Statistics extends AppCompatActivity {
         editor.apply();
 
         for (int i = 0; i < 3; i++) {
-            best_tvs[i].setText("최고기록: -");
-            total_tvs[i].setText("전체 게임: 0");
-            win_tvs[i].setText("승리한 게임: 0");
-            rate_tvs[i].setText("승률: -");
+            best_tvs[i].setText(R.string.best_0);
+            total_tvs[i].setText(R.string.total_0);
+            win_tvs[i].setText(R.string.win_0);
+            rate_tvs[i].setText(R.string.win_rate_0);
         }
     }
 }

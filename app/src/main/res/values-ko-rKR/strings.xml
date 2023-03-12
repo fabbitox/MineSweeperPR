@@ -1,11 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">지뢰찾기</string>
+    <string name="column_text_format">가로: %d</string>
     <string name="row_text_format">세로: %d</string>
     <string name="mine_text">지뢰: 2(5.00%)</string>
     <string name="start_text">시작하기</string>
     <string name="restart_text">다시시작</string>
-    <string name="blank"> </string>
     <string name="flag">깃발</string>
+    <string name="blank">" "</string>
     <string name="count_3digit_sample">000</string>
     <string name="mine_text_format">지뢰: %d(%.2f%%)</string>
     <string name="easy_text">쉬움</string>
@@ -18,7 +20,6 @@
     <string name="winning_rate">승률</string>
     <string name="del_rec_text">기록 삭제</string>
     <string name="fraction">%.2f%%</string>
-    <string name="column_text_format">가로: %d</string>
     <string name="column_text">가로: 5</string>
     <string name="row_text">세로: 8</string>
     <string name="restart_check">다시 시작하시겠습니까?</string>

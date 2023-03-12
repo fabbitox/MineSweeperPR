@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -116,11 +118,14 @@ public class MainActivity extends AppCompatActivity {
             level = Level.HARD;
         });
 
+        findViewById(R.id.korean).setOnClickListener(v -> AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("ko")));
+        findViewById(R.id.english).setOnClickListener(v -> AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("en")));
+
         // SeekBar 값과 TextView, 변수 상호작용
         colBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                colText.setText(String.format("가로: %s", (progress + 5)));
+                colText.setText(String.format(getString(R.string.column_text_format), (progress + 5)));
                 counts[0] = progress + 5;
                 mineBar.setMax(counts[0] * counts[1] / 5 * 2);
                 level = Level.CUSTOM;
@@ -139,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         rowBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                rowText.setText(String.format("세로: %s", progress + 8));
+                rowText.setText(String.format(getString(R.string.row_text_format), progress + 8));
                 counts[1] = progress + 8;
                 mineBar.setMax(counts[0] * counts[1] / 5 * 2);
                 level = Level.CUSTOM;
@@ -186,16 +191,17 @@ public class MainActivity extends AppCompatActivity {
             remainedTv.setText(String.valueOf(remainedCount));
             explodedTv.setText(String.valueOf(explodedCount));
             timerView.setText(String.valueOf(timerCount));
+            restartBtn.setText(R.string.restart_text);
         });
         // 초기화해서 다시 시작할 수 있도록
         restartBtn.setOnClickListener(v -> {
             pauseFlag = true;
             if (!finishFlag) {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertBuilder.setTitle("restart check");
-                alertBuilder.setMessage("다시 시작하시겠습니까?");
-                alertBuilder.setNegativeButton("아니요", (dialog, which) -> pauseFlag = false);
-                alertBuilder.setPositiveButton("예", (dialog, which) -> restartSetting(valueInput, gameUi, flagBtn));
+                alertBuilder.setTitle("Restart check");
+                alertBuilder.setMessage(R.string.restart_check);
+                alertBuilder.setNegativeButton(R.string.no, (dialog, which) -> pauseFlag = false);
+                alertBuilder.setPositiveButton(R.string.yes, (dialog, which) -> restartSetting(valueInput, gameUi, flagBtn));
                 alertBuilder.show();
             }
             else {
@@ -317,28 +323,29 @@ public class MainActivity extends AppCompatActivity {
             finishFlag = true;
             timer.cancel();
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-            alertBuilder.setTitle("finish");
+            alertBuilder.setTitle("Finish");
             String message;
             if (overFlag) {
-                message = explodedCount + "회의 실수로";
+                message = explodedCount + getString(R.string.mistake_str);
             }
             else {
-                message = "승리!";
+                message = getString(R.string.victory);
                 increaseWinCount();
                 updateBest(timerCount);
             }
-            alertBuilder.setMessage(message + " 지뢰가 없는 곳을 " + timerCount + "초 만에 모두 찾아냈습니다!");
+            alertBuilder.setMessage(message + getString(R.string.safe_area) + timerCount + getString(R.string.second_found_all));
             alertBuilder.show();
+            ((TextView)findViewById(R.id.restart_btn)).setText(R.string.main_activity);
         }
         if (game.isMine(index)) {
             if (!overFlag) {
                 overFlag = true;
                 pauseFlag = true;
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
-                alertBuilder.setTitle("game over");
-                alertBuilder.setMessage("지뢰를 터뜨렸습니다! 계속 하시겠습니까?");
-                alertBuilder.setPositiveButton("계속", (dialog, which) -> pauseFlag = false);
-                alertBuilder.setNegativeButton("종료", (dialog, which) -> restartSetting(valueInput, gameUi, flagBtn));
+                alertBuilder.setTitle("Game over");
+                alertBuilder.setMessage(R.string.over_text);
+                alertBuilder.setPositiveButton(R.string.continue_str, (dialog, which) -> pauseFlag = false);
+                alertBuilder.setNegativeButton(R.string.close, (dialog, which) -> restartSetting(valueInput, gameUi, flagBtn));
                 alertBuilder.show();
             }
             remainedCount--;

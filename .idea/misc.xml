@@ -4,9 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.1" />
-        <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/layout/activity_main.xml" value="0.1953125" />
+        <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/layout/activity_statistics.xml" value="0.14666666666666667" />
         <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.126" />
+        <entry key="..\:/Android/projects/MinesweeperPR/app/src/main/res/xml/locales_config.xml" value="0.16304347826086957" />
       </map>
     </option>
   </component>
